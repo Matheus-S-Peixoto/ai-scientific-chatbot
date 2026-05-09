@@ -77,7 +77,10 @@
         position: fixed;
         right: 35px;
         bottom: 90px;
-        width: 420px;
+        height: 80vh;
+        max-height: 650px;
+        width: 42vw;
+        max-width: 420px;
         background: #fff;
         overflow: hidden;
         border-radius: 15px;
@@ -123,7 +126,7 @@
 
     .header-info .logo-text {
         color: #fff;
-        font-size: 2.48rem;
+        font-size: 2.8rem;
         font-weight: 600;
     }
 
@@ -186,7 +189,7 @@
     .chat-body .message .message-text {
         padding: 12px 16px;
         max-width: 75%;
-        font-size: 1.5rem;
+        font-size: 1.7rem;
         background: #F2F2FF;
     }
 
@@ -332,7 +335,7 @@
         background: #f1f1ff;
     }
 
-    @media (max-width: 520px) {
+    @media (max-width: 800px) {
         #chatbot-toggler {
             right: 20px;
             bottom: 20px;
@@ -344,6 +347,8 @@
             height: 100%;
             border-radius: 0;
             width: 100%;
+            max-width: none;
+            max-height: none;
         }
 
         .chatbot-popup .chat-header {
@@ -359,6 +364,9 @@
             padding: 10px 15px 15px;
         }
 
+        body.show-chatbot #chatbot-toggler {
+            display: none;
+        }
     }
 </style>
 
