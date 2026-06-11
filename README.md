@@ -1,4 +1,4 @@
-AI-Powered Scientific Chatbot
+**AI-Powered Scientific Chatbot**
 Overview
 
 An AI-powered chatbot developed for a public health research project.
