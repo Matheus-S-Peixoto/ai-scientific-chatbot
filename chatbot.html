@@ -1,563 +1,1217 @@
 <style>
-    html, body {
+  html,
+  body {
     overflow-x: hidden;
-    }
-    
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Inter", sans-serif;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+  }
+
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined" !important;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: "liga";
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #chatbot-toggler {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 35px !important;
+    border: none;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    background: #21409a;
+    transition: all 0.2s ease;
+    z-index: 999999 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  body.show-chatbot #chatbot-toggler {
+    transform: rotate(90deg);
+  }
+
+  body.show-chatbot #chatbot-toggler {
+    transform: rotate(90deg);
+  }
+
+  #chatbot-toggler span {
+    color: #fff;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  body.show-chatbot #chatbot-toggler span:first-child,
+  #chatbot-toggler span:last-child {
+    opacity: 0;
+  }
+
+  body.show-chatbot #chatbot-toggler span:last-child {
+    opacity: 1;
+  }
+
+  .chatbot-popup {
+    position: fixed;
+    right: 35px;
+    bottom: 90px;
+    height: 80vh;
+    max-height: 650px;
+    width: 42vw;
+    max-width: 420px;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 15px;
+    opacity: 0;
+    transform: scale(0.2);
+    transform-origin: bottom right;
+    pointer-events: none;
+    box-shadow:
+      0 0px 128px rgba(0, 0, 0, 0.1),
+      0 32px 64px -48px rgba(0, 0, 0, 0.5);
+    transition: all 0.1s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+  }
+
+  body.show-chatbot .chatbot-popup {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    background: #21409a;
+    padding: 17px 22px;
+    justify-content: space-between;
+  }
+
+  .chat-header .header-info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .header-info .chatbot-logo {
+    height: 47px;
+    width: 47px;
+    padding: 6px;
+    fill: #21409a;
+    flex-shrink: 0;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  .header-info .logo-text {
+    color: #fff;
+    font-size: 2.8rem;
+    font-weight: 600;
+  }
+
+  .chat-header #close-chatbot {
+    border: none;
+    color: #fff;
+    height: 40px;
+    width: 40px;
+    font-size: 1.9rem;
+    margin-right: -10px;
+    padding-top: 2px;
+    cursor: pointer;
+    border-radius: 50%;
+    background: none;
+    transition: 0.2s ease;
+  }
+
+  .chat-header #close-chatbot:hover {
+    background: rgb(47, 44, 148);
+  }
+
+  .chat-body {
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: #cccce5 transparent;
+  }
+
+  .chat-body .message {
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    text-justify: auto;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .chat-body .bot-message .bot-avatar {
+    height: 40px;
+    width: 40px;
+    padding: 6px;
+    fill: #fff;
+    flex-shrink: 0;
+    align-self: flex-end;
+    flex-shrink: 0;
+    background: #21409a;
+    border-radius: 50%;
+  }
+
+  .chat-body .user-message {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .chat-body .message .message-text {
+    padding: 12px 16px;
+    max-width: 75%;
+    font-size: 1.57rem;
+    line-height: 1.2;
+    background: #f2f2ff;
+  }
+
+  .chat-body .message .message-text p {
+    margin-bottom: 10px;
+  }
+
+  .chat-body .message .message-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .chat-body .message .message-text ul,
+  .chat-body .message .message-text ol {
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  .chat-body .message .message-text li {
+    margin-bottom: 5px;
+  }
+
+  .chat-body .message .message-text a {
+    color: inherit;
+    text-decoration: underline;
+    word-break: break-all;
+  }
+
+  .chat-body .bot-message.thinking .message-text {
+    padding: 1px 16px;
+  }
+
+  .chat-body .bot-message .message-text {
+    background: #f2f2ff;
+    border-radius: 13px 13px 13px 3px;
+  }
+
+  .chat-body .user-message .message-text {
+    color: #fff;
+    background: #21409a;
+    border-radius: 13px 13px 3px 13px;
+  }
+
+  .chat-body .bot-message .thinking-indicator {
+    display: flex;
+    gap: 4px;
+    padding-block: 15px;
+  }
+
+  .chat-body .bot-message .thinking-indicator .dot {
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background: #3c57a7;
+    animation: dotPulse 1.8s ease infinite;
+  }
+
+  .chat-body .bot-message .thinking-indicator .dot:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  .chat-body .bot-message .thinking-indicator .dot:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+
+  .chat-body .bot-message .thinking-indicator .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes dotPulse {
+    0%,
+    44% {
+      transform: translateY(0);
     }
 
-    .material-symbols-outlined {
-        font-family: 'Material Symbols Outlined' !important;
-        font-weight: normal;
-        font-style: normal;
-        font-size: 24px;
-        line-height: 1;
-        letter-spacing: normal;
-        text-transform: none;
-        display: inline-block;
-        white-space: nowrap;
-        word-wrap: normal;
-        direction: ltr;
-        font-feature-settings: 'liga';
-        -webkit-font-feature-settings: 'liga';
-        -webkit-font-smoothing: antialiased;
+    28% {
+      opacity: 0.4;
+      transform: translateY(-4px);
     }
 
+    44% {
+      opacity: 0.2;
+    }
+  }
+
+  .chat-footer {
+    width: 100%;
+    background: #fff;
+    padding: 7px 22px 20px;
+    flex-shrink: 0;
+  }
+
+  .quiz-options {
+    display: none;
+  }
+
+  body.show-quiz .quiz-options {
+    display: block;
+  }
+
+  .quiz-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+
+  .quiz-form button {
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 40px;
+    background: #3d39ac;
+    color: #fff;
+    font-size: 1.39rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      transform 0.2s;
+    text-align: left;
+  }
+
+  .quiz-form button:hover {
+    background: #3732d3;
+    transform: translateY(-2px);
+  }
+
+  .quiz-form button:active {
+    transform: scale(0.98);
+  }
+
+  .quiz-form button:disabled {
+    background: #6588f8;
+    transform: none;
+  }
+
+  body.show-quiz .text-area {
+    display: none;
+  }
+
+  body.show-quiz .chat-body {
+    cursor: none;
+    pointer-events: none;
+  }
+
+  .show-bar {
+    opacity: 0;
+    display: none;
+  }
+
+  .progress-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    padding: 7px 0;
+  }
+
+  .progress {
+    height: 7px;
+    flex-grow: 1;
+    border-radius: 5px;
+    margin: 0 1px;
+    display: flex;
+    background-color: #acacac;
+  }
+
+  .progress.active {
+    background-color: #3b36d4;
+  }
+
+  .progress-num {
+    padding: 0 5px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    align-items: center;
+  }
+
+  body.show-quiz .show-bar {
+    opacity: 1;
+    display: flex;
+  }
+
+  .chat-footer .chat-form {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background: #fff;
+    border-radius: 32px;
+    outline: 1px solid #cccce5;
+  }
+
+  .chat-footer .chat-form:focus-within {
+    outline: 2px solid #21409a;
+  }
+
+  .chat-form .message-input {
+    border: none;
+    outline: none;
+    height: 47px;
+    width: 100%;
+    resize: none;
+    max-height: 180px;
+    white-space: pre-line;
+    font-size: 1.5rem;
+    padding: 14px 0 13px 18px;
+    border-radius: inherit;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .chat-form .message-input:hover {
+    scrollbar-color: #ccccf5 transparent;
+  }
+
+  .chat-form .chat-controls {
+    display: flex;
+    height: 47px;
+    align-items: center;
+    align-self: flex-end;
+    padding-right: 6px;
+  }
+
+  .chat-form .chat-controls button {
+    height: 35px;
+    width: 35px;
+    border: none;
+    font-size: 1.86rem;
+    cursor: pointer;
+    color: #324d9e;
+    background: none;
+    border-radius: 50%;
+    transform: 0.2s ease;
+  }
+
+  .chat-form .chat-controls #send-message {
+    background: #21409a;
+    display: none;
+    color: #fff;
+  }
+
+  .chat-form .chat-controls #send-message.visible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chat-form .chat-controls #send-message:hover {
+    background: rgb(47, 44, 148);
+  }
+
+  .chat-footer .chat-controls button:hover {
+    background: #f1f1ff;
+  }
+
+  @media (max-width: 800px) {
     #chatbot-toggler {
-        position: fixed !important; 
-        bottom: 30px !important;
-        right: 35px !important;
-        border: none;
-        height: 50px;
-        width: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border-radius: 50%;
-        background: #21409A;
-        transition: all 0.2s ease;
-        z-index: 999999 !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-
-    body.show-chatbot #chatbot-toggler {
-        transform: rotate(90deg);
-    }
-
-    body.show-chatbot #chatbot-toggler {
-        transform: rotate(90deg);
-    }
-
-    #chatbot-toggler span {
-        color: #fff;
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;    
-    }
-        
-    body.show-chatbot #chatbot-toggler span:first-child,
-        #chatbot-toggler span:last-child {
-        opacity: 0;
-    }
-
-    body.show-chatbot #chatbot-toggler span:last-child {
-        opacity: 1;
+      right: 20px;
+      bottom: 20px;
     }
 
     .chatbot-popup {
-        position: fixed;
-        right: 35px;
-        bottom: 90px;
-        height: 80vh;
-        max-height: 650px;
-        width: 42vw;
-        max-width: 420px;
-        background: #fff;
-        overflow: hidden;
-        border-radius: 15px;
-        opacity: 0;
-        transform: scale(0.2);
-        transform-origin: bottom right;
-        pointer-events: none;
-        box-shadow: 0 0px 128px rgba(0, 0, 0, 0.1),
-                    0 32px 64px -48px rgba(0, 0, 0, 0.5);
-        transition: all 0.1s ease;
-        z-index: 9999;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      border-radius: 0;
+      width: 100%;
+      max-width: none;
+      max-height: none;
     }
 
-    body.show-chatbot .chatbot-popup {
-        opacity: 1;
-        pointer-events: auto;
-        transform: scale(1);
-    }
-
-    .chat-header {
-        display: flex;
-        align-items: center;
-        background: #21409A;
-        padding: 15px 22px;
-        justify-content: space-between;
-    }
-
-    .chat-header .header-info {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-
-    .header-info .chatbot-logo {
-        height: 47px;
-        width: 47px;
-        padding: 6px;
-        fill: #21409A;
-        flex-shrink: 0;
-        background: #fff;
-        border-radius: 50%;
-    }
-
-    .header-info .logo-text {
-        color: #fff;
-        font-size: 2.8rem;
-        font-weight: 600;
-    }
-
-    .chat-header #close-chatbot {
-        border: none;
-        color: #fff;
-        height: 40px;
-        width: 40px;
-        font-size: 1.9rem;
-        margin-right: -10px;
-        padding-top: 2px;
-        cursor: pointer;
-        border-radius: 50%;
-        background: none;
-        transition: 0.2s ease;
-    }
-
-    .chat-header #close-chatbot:hover {
-        background: rgb(47, 44, 148);
+    .chatbot-popup .chat-header {
+      padding: 12px 15px;
     }
 
     .chat-body {
-        padding: 25px;
-        display: flex;
-        gap: 20px;
-        height: 460px;
-        margin-bottom: 82px;
-        overflow-y: auto;
-        flex-direction: column;
-        scrollbar-width: thin;
-        scrollbar-color: #cccce5 transparent;
-    }
-
-    .chat-body .message {
-        display: flex;
-        gap: 11px;
-        align-items: center;
-        text-justify: auto;
-        word-break: break-word; 
-        overflow-wrap: break-word; 
-    }
-
-    .chat-body .bot-message .bot-avatar {
-        height: 40px;
-        width: 40px;
-        padding: 6px;
-        fill: #fff;
-        flex-shrink: 0;
-        align-self: flex-end;
-        flex-shrink: 0;
-        background: #21409A;
-        border-radius: 50%;
-    }
-
-    .chat-body .user-message {
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    .chat-body .message .message-text {
-        padding: 12px 16px;
-        max-width: 75%;
-        font-size: 1.7rem;
-        background: #F2F2FF;
-    }
-
-    .chat-body .bot-message.thinking .message-text {
-        padding: 1px 16px;
-    }
-
-    .chat-body .bot-message .message-text {
-        background: #F2F2FF;
-        border-radius: 13px 13px 13px 3px;
-    } 
-
-    .chat-body .user-message .message-text {
-        color: #fff;
-        background: #21409A;
-        border-radius: 13px 13px 3px 13px;
-    }
-
-        .chat-body .user-message .attachment {
-        width: 50%;
-        margin-top: -7px;
-        border-radius: 13px 3px 13px 13px;
-    }
-
-    .chat-body .bot-message .thinking-indicator {
-        display: flex;
-        gap: 4px;
-        padding-block: 15px;
-    }
-
-    .chat-body .bot-message .thinking-indicator .dot {
-        height: 6px;
-        width: 6px;
-        border-radius: 50%;
-        background: #3c57a7;
-        animation: dotPulse 1.8s ease infinite
-    }
-
-    .chat-body .bot-message .thinking-indicator .dot:nth-child(1) {
-        animation-delay: 0.2s;
-    }
-
-    .chat-body .bot-message .thinking-indicator .dot:nth-child(2) {
-        animation-delay: 0.3s;
-    }
-
-    .chat-body .bot-message .thinking-indicator .dot:nth-child(3) {
-        animation-delay: 0.4s;
-    }
-
-    @keyframes dotPulse {
-        0%, 44% {
-            transform: translateY(0)
-        }
-
-        28% {
-            opacity: 0.4;
-            transform: translateY(-4px);
-        }
-
-        44% {
-            opacity: 0.2;
-        }
+      height: calc(90% - 55px);
+      padding: 25 15;
     }
 
     .chat-footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        background: #fff;
-        padding: 15px 22px 20px;
+      padding: 10px 15px 15px;
     }
 
-    .chat-footer .chat-form {
-        display: flex;
-        position: relative;
-        align-items: center;
-        background: #fff;
-        border-radius: 32px;
-        outline: 1px solid #cccce5;
+    body.show-chatbot #chatbot-toggler {
+      display: none;
     }
-
-    .chat-footer .chat-form:focus-within {
-        outline: 2px solid #21409A;
-    }
-
-    .chat-form .message-input {
-        border: none;
-        outline: none;
-        height: 47px;
-        width: 100%;
-        resize: none;
-        max-height: 180px;
-        white-space: pre-line;
-        font-size: 1.5rem;
-        padding: 14px 0 13px 18px;
-        border-radius: inherit;
-        scrollbar-width: thin;
-        scrollbar-color: transparent transparent;
-    }
-
-    .chat-form .message-input:hover {
-        scrollbar-color: #ccccf5 transparent;
-    }
-
-    .chat-form .chat-controls {
-        display: flex;
-        height: 47px;
-        align-items: center;
-        align-self: flex-end;
-        padding-right: 6px;
-    }
-
-    .chat-form .chat-controls button {
-        height: 35px;
-        width: 35px;
-        border: none;
-        font-size: 1.86rem;
-        cursor: pointer;
-        color: #706DB0;
-        background: none;
-        border-radius: 50%;
-        transform: 0.2s ease;
-    }
-
-    .chat-form .chat-controls #send-message {
-        background: #21409A;
-        display: none;
-        color: #fff;
-    }
-
-    .chat-form .chat-controls #send-message.visible {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .chat-form .chat-controls #send-message:hover {
-        background: rgb(47, 44, 148);
-    }
-
-    .chat-footer .chat-controls button:hover {
-        background: #f1f1ff;
-    }
-
-    @media (max-width: 800px) {
-        #chatbot-toggler {
-            right: 20px;
-            bottom: 20px;
-        }
-
-        .chatbot-popup {
-            right: 0;
-            bottom: 0;
-            height: 100%;
-            border-radius: 0;
-            width: 100%;
-            max-width: none;
-            max-height: none;
-        }
-
-        .chatbot-popup .chat-header {
-            padding: 12px 15px;
-        }
-
-        .chat-body {
-            height: calc(90% - 55px);
-            padding: 25 15;
-        }
-
-        .chat-footer {
-            padding: 10px 15px 15px;
-        }
-
-        body.show-chatbot #chatbot-toggler {
-            display: none;
-        }
-    }
+  }
 </style>
 
 <button id="chatbot-toggler">
-    <span class="material-symbols-outlined">mode_comment</span>
-    <span class="material-symbols-outlined">close</span>
+  <span class="material-symbols-outlined">mode_comment</span>
+  <span class="material-symbols-outlined">close</span>
 </button>
 
 <div class="chatbot-popup">
-    <div class="chat-header">
-        <div class="header-info">
-            <svg class="chatbot-logo" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
-                <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 
+  <div class="chat-header">
+    <div class="header-info">
+      <svg
+        class="chatbot-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        width="50"
+        height="50"
+        viewBox="0 0 1024 1024"
+      >
+        <path
+          d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 
                 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 
                 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 
                 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 
                 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 
                 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 
-                23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"></path>
-            </svg>
-            <h2 class="logo-text">Desmistifake bot</h2>
-        </div>
-        <button id="close-chatbot" class="material-symbols-outlined">keyboard_arrow_down</button>
+                23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"
+        ></path>
+      </svg>
+      <h2 class="logo-text">Desmistifake bot</h2>
     </div>
+    <button id="close-chatbot" class="material-symbols-outlined">
+      keyboard_arrow_down
+    </button>
+  </div>
 
-    <div class="chat-body">
-        <div class="message bot-message">
-            <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
-                <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 
+  <div class="chat-body">
+    <div class="message bot-message">
+      <svg
+        class="bot-avatar"
+        xmlns="http://www.w3.org/2000/svg"
+        width="50"
+        height="50"
+        viewBox="0 0 1024 1024"
+      >
+        <path
+          d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 
                 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 
                 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 
                 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 
                 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 
                 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 
-                23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"></path>
-            </svg>
-            <div class="message-text">Olá, tudo certo? <br> Como posso ajudar?</div>
+                23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"
+        ></path>
+      </svg>
+      <div class="message-text">
+        Olá! Seja muito bem-vindo(a). ??<br>
+        <br>
+        Eu sou o <strong>Doutor Desmistifake</strong>, o assistente virtual oficial do projeto <strong>Desmistifake Saúde (Unisinos)</strong>.<br>
+        <br>
+        Estou aqui para guiar você pelos conteúdos científicos do nosso projeto, ajudando a combater a desinformação dentro dos limites do nosso material disponível. <br>
+        <br>
+        ?? <strong>Quer testar os seus conhecimentos?</strong><br>
+        Nós também temos um quiz super legal sobre saúde! Para jogar, basta enviar <span style="font-weight: bold;">"/quiz"</span> aqui no chat.<br>
+        <br>
+        Como posso ajudar você hoje?
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <div class="quiz-options">
+      <form action="#" class="quiz-form"></form>
+    </div>
+    <div class="text-area">
+      <form action="#" class="chat-form">
+        <textarea id="message-input" name="message" lang="pt-BR" spellcheck="true" placeholder="Mensagem..." class="message-input" required></textarea>
+        <div class="chat-controls">
+          <button type="submit" id="send-message" class="material-symbols-outlined">arrow_upward</button>
         </div>
+      </form>
     </div>
-
-    <div class="chat-footer">
-        <form action="#" class="chat-form">
-            <textarea id="message-input" name="message" lang="pt-BR" spellcheck="true" placeholder="Mensagem..." class="message-input"></textarea>
-            <div class="chat-controls">  
-                <button type="submit" id="send-message" class="material-symbols-outlined">arrow_upward</button> 
-            </div>
-        </form>
-    </div>
-</div>
-           
-<script>
-    (function () {
-    "use strict";
-
-    const API_URL = "https://desmistifake-bot-backend.mpilg100.workers.dev";
-
-    let conversationHistory = [];
-    let isBusy = false;
-
-    const initChatbot = () => {
-        const chatBody        = document.querySelector(".chat-body");
-        const messageInput    = document.querySelector(".message-input");
-        const sendMessageBtn  = document.querySelector("#send-message");
-        const chatbotToggler  = document.querySelector("#chatbot-toggler");
-        const closeChatbot    = document.querySelector("#close-chatbot");
-        const chatForm        = document.querySelector(".chat-form");
+    <div class="show-bar">
+      <div class="progress-container">
+        <div class="progress"></div> 
+        <div class="progress"></div> 
+        <div class="progress"></div> 
+        <div class="progress"></div> 
+        <div class="progress"></div> 
+        <div class="progress"></div> 
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>   
+        <div class="progress"></div>  
         
-        if (!chatbotToggler || !messageInput) return;
+        <div class="progress-num">
+          <h4 class="pg-h4"></h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        const initialInputHeight = messageInput.scrollHeight;
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-        const scrollToBottom = () => {
-            if (chatBody) {
-                chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-            }
-        };
+<script>
+(function () {
+  "use strict";
 
-        const updateSendButton = () => {
-            const hasText = messageInput.value.trim().length > 0;
-            if (hasText && !isBusy) {
-                sendMessageBtn.classList.add("visible");
-            } else {
-                sendMessageBtn.classList.remove("visible");
-            }
-        };
+  const API_URL = "https://desmistifake-bot-backend.mpilg100.workers.dev";
 
-        const getBotAvatarSVG = () => {
-            return '<svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024"><path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/></svg>';
-        };
+  let conversationHistory = [];
+  let isBusy = false;
+  let scoreQuiz = 0;
+  let currentIndex;
 
-        const generateBotResponse = (thinkingDiv) => {
-            const messageEl = thinkingDiv.querySelector(".message-text");
-            
-            fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ conversationHistory: conversationHistory })
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("Erro na rede");
-                return res.json();
-            })
-            .then(data => {
-                console.log("DATA RECEBIDA:", JSON.stringify(data));
-                console.log("REPLY:", data.reply);
-                console.log("THINKING DIVv NO DOM:", document.body.contains(thinkingDiv));
-                console.log("MESSAGE EL:", messageEl);
-                
-                const reply = data.reply.split("**").join("").trim();
-                conversationHistory.push({ role: "assistant", content: reply });
-                thinkingDiv.classList.remove("thinking");
-                messageEl.textContent = reply;
-                scrollToBottom();
-            })
-            .catch((error) => {
-                console.log("CATCH EXECUTOU:", error);
-                console.log("CATCH ERRO MENSAGEM:", error.message);
-                console.log("CATCH STACK:", error.stack);
-                thinkingDiv.classList.remove("thinking");
-                messageEl.textContent = "Ops, erro ao conectar. Tente novamente ??";
-                messageEl.style.color = "#c00";
-                conversationHistory.pop();
-            })
-            .finally(() => {
-                isBusy = false;
-                updateSendButton();
-            });
-        };
+  const initChatbot = () => {
+    const chatBody = document.querySelector(".chat-body");
+    const messageInput = document.querySelector(".message-input");
+    const sendMessageBtn = document.querySelector("#send-message");
+    const chatbotToggler = document.querySelector("#chatbot-toggler");
+    const closeChatbot = document.querySelector("#close-chatbot");
+    const chatForm = document.querySelector(".chat-form");
+    const btnQuiz = document.querySelector(".quiz-form");
+    const progressBar = document.querySelectorAll(".progress");
+    const progressNum = document.querySelector(".pg-h4");
 
-        const handleOutgoingMessage = (e) => {
-            if (e) e.preventDefault();
-            const text = messageInput.value.trim();
-            if (!text || isBusy) return;
+    const quizQuestions = [
+      {
+        pergunta: `Uma blogueira fitness afirma que: 
+        
+***"O glúten é um veneno inflamatório para todo mundo."***. 
+        
+Qual é a explicação científica que desmente esse boato?`,
+        opcoes: [
+          { id: 1, texto: "O glúten causa uma leve inflamação em todos, mas o corpo consegue neutralizar essa toxina através do suor.", correta: false },
+          {
+            id: 2,
+            texto:
+              "Em indivíduos saudáveis, o glúten é digerido sem desencadear resposta imunológica ou inflamatória sistêmica.", correta: true,
+          },
+          { id: 3, texto: "A inflamação sistêmica do glúten só ocorre se a pessoa não praticar atividades físicas regularmente.", correta: false },
+        ],
+        explicacao:
+          "A ciência demonstra que organismos saudáveis lidam perfeitamente com a proteína do glúten, e sua restrição desnecessária pode até reduzir a ingestão de fibras importantes.",
+      },
+      {
+        pergunta: `Um coach de emagrecimento alerta que: 
+        
+***"a frutose da fruta vai direto para o fígado e causa esteatose hepática".*** 
+        
+Por que essa afirmação é nutricionalmente incorreta?`,
+        opcoes: [
+          { id: 1, texto: "A frutose presente nas frutas íntegras vem acompanhada de fibras e polifenóis que modulam sua absorção.", correta: true },
+          { id: 2, texto: "A esteatose hepática só é causada por fatores genéticos, sendo impossível desenvolvê-la através da alimentação.", correta: false },
+          { id: 3, texto: "O fígado humano não possui enzimas capazes de metabolizar a frutose, eliminando-a intacta na urina.", correta: false },
+        ],
+        explicacao:
+          "A matriz alimentar da fruta inteira protege o fígado, pois as fibras lentificam a absorção da frutose. A esteatose está ligada ao excesso de frutose livre em xaropes de ultraprocessados.",
+      },
+      {
+        pergunta: `Ao ouvir que uma **"dieta detox de sucos verdes"** limpa o fígado de toxinas, qual é o argumento biológico para refutar essa ideia?`,
+        opcoes: [
+          { id: 1, texto: "Os sucos verdes possuem enzimas ativas que substituem temporariamente as funções do fígado durante a digestão.", correta: false },
+          { id: 2, texto: "A detoxificação só ocorre se o suco verde for consumido em jejum, momento em que o fígado está inativo.", correta: false },
+          { id: 3, texto: "O processo de detoxificação hepática ocorre via Fases I e II, e não há evidências de que sucos potencializem essas vias acima da capacidade natural.", correta: true },
+        ],
+        explicacao:
+          "O fígado (via enzimas do Citocromo P450) e os rins já realizam a desintoxicação contínua do corpo de forma autônoma e eficiente.",
+      },
+      {
+        pergunta: `Qual é a **falsa promessa** associada ao consumo de sal rosa do Himalaia no controle da pressão arterial?`,
+        opcoes: [
+          { id: 1, texto: "Ele possui minerais mágicos que neutralizam completamente o efeito do cloreto de sódio no sangue.", correta: false },
+          { id: 2, texto: "O sal rosa é livre de sódio e composto apenas por magnésio, tornando-o o único tratamento natural para hipertensão.", correta: false },
+          { id: 3, texto: "Para obter benefícios nutricionais dos seus minerais extras, seria necessária uma ingestão letal de sal pelo excesso de sódio.", correta: true },
+        ],
+        explicacao:
+          `A concentração de minerais no sal rosa é ínfima. 
 
-            isBusy = true;
-            updateSendButton();
-            messageInput.value = "";
-            messageInput.style.height = initialInputHeight + "px";
-            chatForm.style.borderRadius = "32px";
- 
+Seria preciso consumir quantidades tóxicas de cloreto de sódio para obter alguma vantagem nutricional relevante.`,
+      },
+      {
+        pergunta: "Um grupo de pais afirma que vacinas de mRNA alteram o DNA humano para sempre. Como a biologia molecular explica que isso é impossível?",
+        opcoes: [
+          { id: 1, texto: "O mRNA atua apenas no citoplasma para sintetizar proteínas, não entra no núcleo onde está o DNA, e é rapidamente degradado.", correta: true },
+          { id: 2, texto: "As vacinas de mRNA alteram o DNA temporariamente apenas por 24 horas, revertendo ao normal em seguida.", correta: false },
+          { id: 3, texto: "O sistema imunológico destrói a vacina antes que ela consiga entrar em qualquer célula do corpo.", correta: false },
+        ],
+        explicacao:
+          "O mRNA da vacina não consegue acessar o núcleo da célula e não possui enzimas para se fundir ao genoma humano. Ele apenas ensina a célula a criar a proteína viral e logo é destruído.",
+      },
+      {
+        pergunta: `Por que o argumento de que 
+        
+**"pegar a doença fortalece o corpo muito mais do que vacinas sintéticas"** 
 
-            const outgoingDiv = document.createElement("div");
-            outgoingDiv.classList.add("message", "user-message");
-            const textNode = document.createElement("div");
-            textNode.classList.add("message-text");
-            textNode.textContent = text;
-            outgoingDiv.appendChild(textNode);
-            chatBody.appendChild(outgoingDiv);
-            scrollToBottom();
+É um risco à saúde pública?`,
+        opcoes: [
+          { id: 1, texto: "A infecção natural gera uma resposta imune idêntica à da vacina, mas é mais barata para o sistema de saúde.", correta: false },
+          { id: 2, texto: "O custo biológico da infecção natural é desproporcional, acarretando riscos de sequelas graves e óbito, enquanto vacinas treinam a imunidade com segurança.", correta: true },
+          { id: 3, texto: "As vacinas sintéticas enfraquecem permanentemente os glóbulos brancos, tornando a pessoa dependente de reforços anuais.", correta: false },
+        ],
+        explicacao:
+          "As vacinas oferecem o benefício de criar memória imunológica (imunidade duradoura) sem o altíssimo custo biológico e o risco real de complicações severas da doença ativa.",
+      },
+      {
+        pergunta: `Em fóruns, circula o mito de que grávidas não podem tomar vacinas porque ***"inflamam o corpo e prejudicam o bebê"***. 
 
-            conversationHistory.push({ role: "user", content: text });
+Qual é a realidade imunológica?`,
+        opcoes: [
+          { id: 1, texto: "Gestantes só podem ser vacinadas no primeiro mês de gravidez, antes que a placenta seja completamente formada.", correta: false },
+          { id: 2, texto: "A vacinação não protege o bebê, mas é obrigatória apenas para evitar que a mãe transmita doenças respiratórias no parto.", correta: false },
+          { id: 3, texto: "As vacinas indicadas para gestantes usam vírus inativados, protegendo a mãe e transferindo anticorpos (IgG) cruciais para o bebê.", correta: true },
+        ],
+        explicacao:
+          "A vacinação materna (como a da gripe) é essencial para conferir imunidade passiva ao recém-nascido nos primeiros meses de vida através da placenta.",
+      },
+      {
+        pergunta: `Muitas pessoas acreditam que a vacina da gripe causa a própria doença por conter ***"vírus vivo"***. 
 
-            setTimeout(() => {
-                const thinkingDiv = document.createElement("div");
-                thinkingDiv.classList.add("message", "bot-message", "thinking");
-                thinkingDiv.innerHTML = getBotAvatarSVG() + 
-                    '<div class="message-text"><div class="thinking-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
-                chatBody.appendChild(thinkingDiv);
-                scrollToBottom();
-                generateBotResponse(thinkingDiv);
-            }, 600);
-        };
+Por que isso é biologicamente impossível no sistema público?`,
+        opcoes: [
+          { id: 1, texto: "As vacinas de influenza do sistema público são inativadas (vírus mortos) ou fracionadas, tornando impossível que recuperem a replicação no hospedeiro.", correta: true },
+          { id: 2, texto: "A vacina contém o vírus vivo, mas ele é neutralizado pelo ácido estomacal antes de causar sintomas.", correta: false },
+          { id: 3, texto: "O vírus da vacina sofre uma mutação imediata ao entrar no corpo humano, transformando-se em uma bactéria inofensiva.", correta: false },
+        ],
+        explicacao:
+          "Como o material genético do vírus foi destruído, ele não tem como se multiplicar e causar a infecção. Reações leves são apenas o corpo reagindo ao imunizante, não a doença.",
+      },
+      {
+        pergunta: "O boato de que a nova vacina da Dengue (**Qdenga**) causa a forma hemorrágica em quem nunca pegou a doença é baseado em qual erro?",
+        opcoes: [
+          { id: 1, texto: "É uma desatualização histórica que confunde os problemas da primeira vacina (Dengvaxia) com a segurança quimérica da nova vacina (Qdenga).", correta: true },
+          { id: 2, texto: "A Qdenga realmente causa a forma hemorrágica, mas apenas em crianças menores de 2 anos de idade.", correta: false },
+          { id: 3, texto: "A vacina atual é estruturada apenas com o vírus da febre amarela, não oferecendo proteção real contra a dengue.", correta: false },
+        ],
+        explicacao:
+          `A Qdenga foi desenhada para superar as limitações da vacina anterior. 
+          
+Sendo uma vacina quimérica, ela demonstrou eficácia sem o risco de agravar a doença em pacientes soronegativos (que nunca tiveram dengue).`,
+      },
+      {
+        pergunta: "Por que o uso imediato de antibióticos fortes para curar uma gripe é uma prática de uso irracional de medicamentos?",
+        opcoes: [
+          { id: 1, texto: "Antibióticos perdem a validade rapidamente quando entram em contato com os vírus respiratórios.", correta: false },
+          { id: 2, texto: "Os antibióticos aceleram a replicação do vírus da gripe, fazendo com que ela evolua inevitavelmente para pneumonia.", correta: false },
+          { id: 3, texto: "Gripes são causadas por vírus, enquanto antibióticos atingem apenas estruturas bacterianas, e o seu uso indevido cria superbactérias.", correta: true },
+        ],
+        explicacao:
+          "Antibióticos atuam em estruturas exclusivas das bactérias (como a parede celular). Usá-los contra infecções virais é **inútil** e contribui gravemente para a resistência antimicrobiana global.",
+      },
+      {
+        pergunta: `Anúncios muitas vezes vendem o Ozempic como a ***"cura definitiva"*** para emagrecer sem esforço. 
 
-        messageInput.addEventListener("input", () => {
-            messageInput.style.height = initialInputHeight + "px";
-            messageInput.style.height = Math.min(messageInput.scrollHeight, 180) + "px";
-            updateSendButton();
-        });
+Qual é a falha clínica dessa promessa?`,
+        opcoes: [
+          { id: 1, texto: "O medicamento altera a genética do paciente, criando um bloqueio permanente de absorção de gorduras.", correta: false },
+          { id: 2, texto: "A perda de peso rápida sem mudança de estilo de vida, nutrição e treino de força causa perda de massa magra grave e um forte efeito rebote posterior.", correta: true },
+          { id: 3, texto: "A semaglutida só funciona em pacientes que consomem exclusivamente dietas vegetarianas estritas.", correta: false },
+        ],
+        explicacao:
+          `O emagrecimento induzido sem suporte nutricional e físico adequados resulta em perda de tecido muscular. 
+          
+Ao cessar a medicação (análogo do GLP-1), o ganho de peso (rebote) é rápido e o metabolismo fica prejudicado.`,
+      },
+      {
+        pergunta: `Céticos argumentam que o aquecimento global atual é apenas um ***"ciclo natural"***. 
 
-        messageInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 768) {
-                handleOutgoingMessage(e);
-            }
-        });
+Que evidência científica irrefutável liga o evento à ação humana?`,
+        opcoes: [
+          { id: 1, texto: "O derretimento das calotas polares está liberando gases artificiais que foram congelados durante a era dos dinossauros.", correta: false },
+          { id: 2, texto: "Os satélites modernos mediram um aumento na atividade solar que afeta diretamente apenas as regiões industrializadas.", correta: false },
+          { id: 3, texto: "A assinatura isotópica do carbono na atmosfera prova que o excesso de CO2 tem origem na queima de combustíveis fósseis.", correta: true },
+        ],
+        explicacao:
+          `A proporção de isótopos de carbono (a **"impressão digital"** do gás) confirma que o aumento abrupto de CO2 atual vem do carbono antigo retirado do subsolo (combustíveis fósseis), e não de fontes biogênicas naturais.`,
+      },
+      {
+        pergunta: "Por que a ocorrência de episódios de frio extremo e nevascas severas **NÃO** invalida a existência do aquecimento global?",
+        opcoes: [
+          { id: 1, texto: "O evento extremo é causado pela instabilidade térmica que desestabiliza correntes de ar polar, empurrando massas congelantes para latitudes mais baixas.", correta: true },
+          { id: 2, texto: "O aquecimento global afeta apenas o Hemisfério Sul, deixando o Hemisfério Norte cada vez mais frio.", correta: false },
+          { id: 3, texto: "O frio extremo ocorre porque as calotas polares estão evaporando e resfriando artificialmente a atmosfera.", correta: false },
+        ],
+        explicacao:
+          `A confusão ocorre por não diferenciar tempo (curto prazo) e clima (longo prazo). 
+          
+O aquecimento global altera e enfraquece as barreiras atmosféricas naturais, permitindo que frentes de frio severo alcancem locais anormais.`,
+      },
+      {
+        pergunta: `Um argumento comum tenta justificar as queimadas na Amazônia como: 
+        
+***"eventos naturais causados pelo calor extremo"***. 
 
-        sendMessageBtn.addEventListener("click", handleOutgoingMessage);
+Biogeograficamente, por que isso está errado?`,
+        opcoes: [
+          { id: 1, texto: "As árvores da Amazônia produzem uma seiva altamente inflamável que entra em combustão espontânea durante o verão.", correta: false },
+          { id: 2, texto: "A Amazônia é uma floresta úmida onde o fogo não faz parte do ciclo natural; as queimadas são majoritariamente de origem humana para abrir pastagens.", correta: true },
+          { id: 3, texto: "O aquecimento global secou os rios, transformando a Amazônia em um grande deserto, o que atrai raios incendiários.", correta: false },
+        ],
+        explicacao:
+          "Diferente do Cerrado, a Amazônia não evoluiu com o fogo e não entra em combustão espontânea facilmente. Os fogos são criminosos ou deliberados.",
+      },
+      {
+        pergunta: `Ao afirmar que 
+        
+***"a crise climática é um problema que só afetará as gerações do próximo século"*** 
 
-        chatbotToggler.addEventListener("click", () => {
-            document.body.classList.toggle("show-chatbot");
-        });
+Qual técnica de desinformação está sendo usada e qual é a realidade?`,
+        opcoes: [
+          { id: 1, texto: "Usa a Inversão Lógica. A realidade é que o clima da Terra voltará ao normal em 10 anos devido a mecanismos de auto-refrigeração do planeta.", correta: false },
+          { id: 2, texto: "Usa o Distanciamento Temporal. A realidade é que os impactos já são severos no presente, manifestando-se em eventos climáticos extremos e piora da saúde pública.", correta: true },
+          { id: 3, texto: "Usa o Medo do Futuro. A realidade é que as projeções climáticas estão todas erradas e nenhum efeito é sentido no presente.", correta: false },
+        ],
+        explicacao:
+          `A desinformação tenta adiar ações através do distanciamento. 
 
-        closeChatbot.addEventListener("click", () => {
-            document.body.classList.remove("show-chatbot");
+Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças infecciosas mostram que a crise já é uma realidade da década atual.`,
+      }
+    ];
+
+    if (!chatbotToggler || !messageInput) return;
+
+    const initialInputHeight = messageInput.scrollHeight;
+
+    const scrollToBottom = () => {
+      if (chatBody) {
+        chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+      }
+    };
+
+    const updateSendButton = () => {
+      const hasText = messageInput.value.trim().length > 0;
+      if (hasText && !isBusy) {
+        sendMessageBtn.classList.add("visible");
+      } else {
+        sendMessageBtn.classList.remove("visible");
+      }
+    };
+
+    const getBotAvatarSVG = () => {
+      return '<svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024"><path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/></svg>';
+    };
+
+    const generateBotResponse = (thinkingDiv) => {
+      const messageEl = thinkingDiv.querySelector(".message-text");
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ conversationHistory: conversationHistory }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Erro na rede");
+          return res.json();
+        })
+        .then((data) => {
+          console.log("DATA RECEBIDA:", JSON.stringify(data));
+          console.log("REPLY:", data.reply);
+          console.log(
+            "THINKING DIV NO DOM:",
+            document.body.contains(thinkingDiv),
+          );
+          console.log("MESSAGE EL:", messageEl);
+
+          const rawReply = data.reply.trim();
+          const formattedReply = marked.parse(rawReply);
+          conversationHistory.push({ role: "assistant", content: rawReply });
+          thinkingDiv.classList.remove("thinking");
+          messageEl.innerHTML = formattedReply;
+          scrollToBottom();
+        })
+        .catch((error) => {
+          console.log("CATCH EXECUTOU:", error);
+          console.log("CATCH ERRO MENSAGEM:", error.message);
+          console.log("CATCH STACK:", error.stack);
+          thinkingDiv.classList.remove("thinking");
+          messageEl.textContent = "Ops, erro ao conectar. Tente novamente ??";
+          messageEl.style.color = "#c00";
+          conversationHistory.pop();
+        })
+        .finally(() => {
+          isBusy = false;
+          updateSendButton();
         });
     };
 
-    if (document.readyState === "complete" || document.readyState === "interactive") {
-        initChatbot();
-    } else {
-        window.addEventListener("DOMContentLoaded", initChatbot);
-    }
+    const handleOutgoingMessage = (e) => {
+      if (e) e.preventDefault();
+      const text = messageInput.value.trim();
+      if (!text || isBusy) return;
 
-    })();
+      isBusy = true;
+      updateSendButton();
+      messageInput.value = "";
+      messageInput.style.height = initialInputHeight + "px";
+      chatForm.style.borderRadius = "32px";
+
+      const outgoingDiv = document.createElement("div");
+      outgoingDiv.classList.add("message", "user-message");
+      const textNode = document.createElement("div");
+      textNode.classList.add("message-text");
+      textNode.textContent = text;
+      outgoingDiv.appendChild(textNode);
+      chatBody.appendChild(outgoingDiv);
+      scrollToBottom();
+
+      conversationHistory.push({ role: "user", content: text });
+
+      setTimeout(() => {
+        const thinkingDiv = document.createElement("div");
+        thinkingDiv.classList.add("message", "bot-message", "thinking");
+        thinkingDiv.innerHTML =
+          getBotAvatarSVG() +
+          '<div class="message-text"><div class="thinking-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+        chatBody.appendChild(thinkingDiv);
+        scrollToBottom();
+        generateBotResponse(thinkingDiv);
+      }, 600);
+    };
+
+    const generateQuizText = (text, role) => {
+      if (role === "bot-message") {
+        const thinkingDiv = document.createElement("div");
+        thinkingDiv.classList.add("message", "bot-message", "thinking");
+        thinkingDiv.innerHTML =
+          getBotAvatarSVG() +
+          '<div class="message-text"><div class="thinking-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+        chatBody.appendChild(thinkingDiv);
+        //scrollToBottom();
+
+        const questionEl = thinkingDiv.querySelector(".message-text");
+        const questionTxt = text;
+        const formattedTxt = marked.parse(text);
+
+        setTimeout(() => {
+          thinkingDiv.classList.remove("thinking");
+          questionEl.innerHTML = formattedTxt;
+          //scrollToBottom();
+        }, 600);
+
+        return thinkingDiv;
+      } else if (role === "user-message") {
+        const outgoingDiv = document.createElement("div");
+        outgoingDiv.classList.add("message", "user-message");
+        const textNode = document.createElement("div");
+        textNode.classList.add("message-text");
+        textNode.textContent = text;
+        outgoingDiv.appendChild(textNode);
+        chatBody.appendChild(outgoingDiv);
+        //scrollToBottom();
+
+        return outgoingDiv;
+      } else {
+        finishQuiz(0);
+        console.log("undefined 'role' in 'generateQuizText()'");
+      }
+    };
+
+    const renderButtons = (buttons) => {
+      btnQuiz.innerHTML = "";
+      buttons.forEach((btn) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = btn.texto;
+        button.dataset.action = btn.action;
+        button.dataset.correta = btn.correta;
+        btnQuiz.appendChild(button);
+      });
+    };
+
+    const submitAnswer = (option, correta) => {
+      if (isBusy) return;
+      isBusy = true;
+      btnQuiz
+        .querySelectorAll("button")
+        .forEach((btn) => (btn.disabled = true));
+
+      const messageEl = generateQuizText(option, "user-message");
+      const feedbackText =
+        correta === "true"
+          ? "&#x2705; Correto! Mais uma fake news desmistificada por você."
+          : "? Resposta incorreta, mas é errando que se aprende! Confira a explicação a seguir.";
+
+      if (correta === "true") {
+        scoreQuiz++;
+      }
+
+      generateQuizText(feedbackText, "bot-message");
+
+      setTimeout(() => {
+        generateQuizText(quizQuestions[currentIndex].explicacao, "bot-message");
+        scrollToMessage(messageEl);
+
+        if (currentIndex < quizQuestions.length - 1) {
+          renderButtons([{ texto: "Próxima Pergunta", action: "next" }]);
+        } else {
+          renderButtons([{ texto: "Finalizar Quiz", action: "exit" }]);
+        }
+
+        isBusy = false;
+      }, 700);
+
+    };
+
+    const updateOptions = (index) => {
+      const op1 = quizQuestions[index].opcoes[0].texto;
+      const op2 = quizQuestions[index].opcoes[1].texto;
+      const op3 = quizQuestions[index].opcoes[2].texto;
+
+      renderButtons([
+        {
+          texto: op1,
+          action: "answer",
+          correta: quizQuestions[index].opcoes[0].correta,
+        },
+        {
+          texto: op2,
+          action: "answer",
+          correta: quizQuestions[index].opcoes[1].correta,
+        },
+        {
+          texto: op3,
+          action: "answer",
+          correta: quizQuestions[index].opcoes[2].correta,
+        },
+      ]);
+    };
+
+    const showQuestions = (index) => {
+      if (isBusy) return;
+      isBusy = true;
+      btnQuiz
+        .querySelectorAll("button")
+        .forEach((btn) => (btn.disabled = true));
+
+      setTimeout(() => {
+        let botText = quizQuestions[index].pergunta;
+        const messageEl = generateQuizText(botText, "bot-message");
+        scrollToMessage(messageEl);
+
+        updateOptions(index);
+        if (!progressBar[currentIndex].classList.contains("active")) {
+          progressBar[currentIndex].classList.add("active");
+        } else {
+          progressBar[currentIndex].remove("active");
+        }
+        progressNum.innerHTML = `${currentIndex + 1}/15`;
+        isBusy = false;
+      }, 600);
+    };
+
+    const scrollToMessage = (elemnt) => {
+      const oldSpacer = document.querySelector("#quiz-spacer");
+      if (oldSpacer) oldSpacer.remove();
+
+      const spacer = document.createElement("div");
+      spacer.id = "quiz-spacer";
+      spacer.style.minHeight = "394px";
+      chatBody.appendChild(spacer);
+
+      requestAnimationFrame(() => {
+        const relativeTop = elemnt.offsetTop - chatBody.offsetTop;
+        chatBody.scrollTo({
+          top: relativeTop - 15,
+          behavior: "smooth",
+        });
+      });
+    };
+
+    const finishQuiz = (indexA) => {
+      if (isBusy) return;
+      isBusy = true;
+      btnQuiz
+        .querySelectorAll("button")
+        .forEach((btn) => (btn.disabled = true));
+
+      setTimeout(() => {
+        let questionTxt = [
+          {
+            id: [20],
+            text: "Tudo bem, volte outro dia para testar seus conhecimentos!"
+          },
+          {
+            id: [0, 1, 2, 3],
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Iniciante Curioso.</strong><br><br>Você ainda está no início da jornada, mas o mais importante é que deu o primeiro passo. A desinformação se combate com informação — explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> e comece a construir seu senso crítico.<br><br>Nos siga no Instagram <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> para aprender mais todo dia!`
+          },
+          {
+            id: [4, 5, 6, 7, 8],
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Detector em Treinamento.</strong><br><br>Você já consegue identificar algumas fake news, mas vieses cognitivos e narrativas enganosas ainda podem te pegar de surpresa. Continue treinando — o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> está cheio de conteúdo para te levar ao próximo nível.<br><br>Nos siga no <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>!`
+          },
+          {
+            id: [9, 10, 11, 12],
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Analista Crítico.</strong><br><br>Seu senso crítico já está bem desenvolvido e poucos mitos passam por você. Para ir além, explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> — lá você encontra análises aprofundadas sobre desinformação, fake news e pensamento crítico.<br><br>Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> e fique sempre à frente.`
+          },
+          {
+            id: [13, 14, 15],
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Desmistificador.</strong><br><br>Seu nível de pensamento crítico é raro — você não apenas identifica fake news, como entende os mecanismos por trás delas. Compartilhe esse conhecimento, indique o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> para quem precisa.<br><br>O mundo precisa de mais pessoas como você. Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>.`
+          }
+        ];
+        
+        let messageEl;
+        
+        if (indexA == 0) {
+          messageEl = generateQuizText(questionTxt.find(op => op.id.includes(20)).text, "bot-message");
+        } else {
+          messageEl = generateQuizText(questionTxt.find(op => op.id.includes(scoreQuiz)).text, "bot-message");
+        }
+
+        document.body.classList.remove("show-quiz");
+
+        progressBar.forEach((bar) => bar.classList.remove("active"));
+
+        scrollToMessage(messageEl);
+        isBusy = false;
+      }, 600);
+    };
+
+    const startQuiz = (e) => {
+      if (e) e.preventDefault();
+      const text = messageInput.value.trim();
+      if (!text || isBusy) return;
+
+      isBusy = true;
+      currentIndex = 0;
+      scoreQuiz = 0;
+      conversationHistory = [];
+
+      messageInput.value = "";
+      messageInput.style.height = initialInputHeight + "px";
+      chatForm.style.borderRadius = "32px";
+      messageInput.dispatchEvent(new Event("input"));
+
+      generateQuizText("/quiz", "user-message");
+
+      setTimeout(() => {
+        const botText = `Bem-vindo ao **Quiz Desmistifake!** 
+          
+Vou te fazer 15 perguntas sobre saúde. 
+
+Bora lá?`;
+        const messageEl = generateQuizText(botText, "bot-message");
+
+        scrollToMessage(messageEl);
+
+        renderButtons([
+          { texto: "Começar", action: "start" },
+          { texto: "Sair", action: "exit" },
+        ]);
+        progressNum.innerHTML = `0/15`;
+        document.body.classList.toggle("show-quiz");
+        isBusy = false;
+      }, 600);
+    };
+
+    messageInput.addEventListener("input", () => {
+      messageInput.style.height = initialInputHeight + "px";
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 180) + "px";
+      if(messageInput.scrollHeight > initialInputHeight) {
+        chatForm.style.borderRadius = "20px";
+      }
+      updateSendButton();
+    });
+
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 768) {
+        e.preventDefault();
+        if (messageInput.value.trim() === "/quiz") {
+          startQuiz();
+        } else {
+          handleOutgoingMessage(e);
+        }
+      }
+    });
+
+    sendMessageBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const message = messageInput.value.trim();
+
+      if (message === "/quiz") {
+        startQuiz();
+      } else {
+        handleOutgoingMessage();
+      }
+    });
+
+    btnQuiz.addEventListener("click", (e) => {
+      if (!e.target.dataset.action) return;
+      const action = e.target.dataset.action;
+
+      if (action === "start") {
+        currentIndex = 0;
+        showQuestions(currentIndex);
+      } else if (action === "exit") {
+        finishQuiz(currentIndex);
+      } else if (action === "next") {
+        currentIndex++;
+        if (currentIndex < quizQuestions.length) {
+          showQuestions(currentIndex);
+        } else {
+          finishQuiz(currentIndex);
+        }
+      } else if (action === "answer") {
+        const correta = e.target.dataset.correta;
+
+        submitAnswer(e.target.innerText, correta);
+      }
+    });
+
+    chatbotToggler.addEventListener("click", () => {
+      document.body.classList.toggle("show-chatbot");
+    });
+
+    closeChatbot.addEventListener("click", () => {
+      document.body.classList.remove("show-chatbot");
+    });
+  };
+
+  if (
+    document.readyState === "complete" ||
+    document.readyState === "interactive"
+  ) {
+    initChatbot();
+  } else {
+    window.addEventListener("DOMContentLoaded", initChatbot);
+  }
+})();
+
 </script>
