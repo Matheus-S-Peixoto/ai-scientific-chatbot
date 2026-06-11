@@ -1,10 +1,24 @@
-# Popup Chatbot w AI
-Popup Chatbot feito com fronend com inteligencia artificial integrada
+AI-Powered Scientific Chatbot
+Overview
 
-Projeto feito para o site desmistifake.unisinos.br
+An AI-powered chatbot developed for a public health research project.
 
-O site do projeto foi feito pelo Great Pages, então para poder integrar o chatbot eu tive que juntar HTML, CSS e javascript em um unico arquivo html.
+The system uses a vectorized knowledge base built from scientific articles, allowing users to ask questions in natural language and receive context-aware responses grounded in scientific evidence.
 
-Os links que iriam na tag "head" estão no editor de paginas do Great Pages, por isso não aparecem no codigo.
+Features
+AI-powered conversations
+Semantic search
+Scientific article retrieval
+Frontend integration
+Cloudflare Workers backend
+Production deployment
+Technologies
+JavaScript
+Node.js
+Cloudflare Workers
+Vector Search
+RAG Architecture
+AI APIs
+Architecture
 
-Não documentei as fases anteriores do projeto pois a API Key estava exposta no codigo, agora estou usando um worker do CloudFlare de backend.
+User â†’ Frontend â†’ Cloudflare Worker â†’ Vector Search â†’ AI Model â†’ Response
