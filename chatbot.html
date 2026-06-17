@@ -161,6 +161,7 @@
     flex-direction: column;
     scrollbar-width: thin;
     scrollbar-color: #cccce5 transparent;
+    overscroll-behavior: contain;
   }
 
   .chat-body .message {
@@ -234,6 +235,7 @@
     color: #fff;
     background: #21409a;
     border-radius: 13px 13px 3px 13px;
+    white-space: pre-wrap;
   }
 
   .chat-body .bot-message .thinking-indicator {
@@ -397,7 +399,7 @@
     width: 100%;
     resize: none;
     max-height: 180px;
-    white-space: pre-line;
+    white-space: pre-wrap;
     font-size: 1.5rem;
     padding: 14px 0 13px 18px;
     border-radius: inherit;
@@ -415,6 +417,7 @@
     align-items: center;
     align-self: flex-end;
     padding-right: 6px;
+    padding-left: 4px;
   }
 
   .chat-form .chat-controls button {
@@ -1142,19 +1145,21 @@ Bora l�?`;
     };
 
     messageInput.addEventListener("input", () => {
-    messageInput.style.height = initialInputHeight + "px";
-    
-    const newHeight = Math.min(messageInput.scrollHeight, 180);
-    messageInput.style.height = newHeight + "px";
-    
-    if (newHeight > initialInputHeight) {
-        chatForm.style.borderRadius = "20px";
-    } else {
-        chatForm.style.borderRadius = "";
-    }
-    
-    updateSendButton();
-});
+      messageInput.style.height = initialInputHeight + "px";
+      
+      let currentScrollHeight = messageInput.scrollHeight;
+      
+      if (messageInput.value.trim() === "" || currentScrollHeight <= 66) {
+          messageInput.style.height = initialInputHeight + "px";
+          chatForm.style.borderRadius = ""; 
+      } else {
+          const newHeight = Math.min(currentScrollHeight, 180);
+          messageInput.style.height = newHeight + "px";
+          chatForm.style.borderRadius = "20px";
+      }
+      
+      updateSendButton();
+    });
 
     messageInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 768) {
