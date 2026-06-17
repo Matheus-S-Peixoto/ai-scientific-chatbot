@@ -459,30 +459,44 @@
     }
 
     .chatbot-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
       right: 0;
-      bottom: 0;
-      height: 100%;
-      border-radius: 0;
+      
+      /* Deixamos a altura inicial, mas o JS vai atualizar dinamicamente no mobile */
+      height: 100%; 
       width: 100%;
       max-width: none;
       max-height: none;
+      border-radius: 0;
+
+      display: flex !important;
+      flex-direction: column !important;
     }
 
     .chatbot-popup .chat-header {
       padding: 12px 15px;
+      flex-shrink: 0 !important; /* Impede o topo de sumir */
     }
 
     .chat-body {
-      height: calc(90% - 55px);
-      padding: 25 15;
+      flex: 1 !important; 
+      padding: 25px 15px; 
+      overflow-y: auto !important;
     }
 
     .chat-footer {
       padding: 10px 15px 15px;
+      flex-shrink: 0 !important; /* Impede o rodapé de quebrar */
     }
 
     body.show-chatbot #chatbot-toggler {
       display: none;
+    }
+
+    body.show-chatbot {
+      overflow: hidden !important;
     }
   }
 </style>
@@ -539,16 +553,16 @@
         ></path>
       </svg>
       <div class="message-text">
-        Ol�! Seja muito bem-vindo(a). ??<br>
+        Olá! Seja muito bem-vindo(a). 😊<br>
         <br>
-        Eu sou o <strong>Doutor Desmistifake</strong>, o assistente virtual oficial do projeto <strong>Desmistifake Sa�de (Unisinos)</strong>.<br>
+        Eu sou o <strong>Doutor Desmistifake</strong>, o assistente virtual oficial do projeto <strong>Desmistifake Saúde (Unisinos)</strong>.<br>
         <br>
-        Estou aqui para guiar voc� pelos conte�dos cient�ficos do nosso projeto, ajudando a combater a desinforma��o dentro dos limites do nosso material dispon�vel. <br>
+        Estou aqui para guiar você pelos conteúdos científicos do nosso projeto, ajudando a combater a desinformação dentro dos limites do nosso material disponível. <br>
         <br>
-        ?? <strong>Quer testar os seus conhecimentos?</strong><br>
-        N�s tamb�m temos um quiz super legal sobre sa�de! Para jogar, basta enviar <span style="font-weight: bold;">"/quiz"</span> aqui no chat.<br>
+        💡 <strong>Quer testar os seus conhecimentos?</strong><br>
+        Nós também temos um quiz super legal sobre saúde! Para jogar, basta enviar <span style="font-weight: bold;">"/quiz"</span> aqui no chat.<br>
         <br>
-        Como posso ajudar voc� hoje?
+        Como posso ajudar você hoje?
       </div>
     </div>
   </div>
@@ -619,194 +633,194 @@
       {
         pergunta: `Uma blogueira fitness afirma que: 
         
-***"O gl�ten � um veneno inflamat�rio para todo mundo."***. 
+***"O glúten é um veneno inflamatório para todo mundo."***. 
         
-Qual � a explica��o cient�fica que desmente esse boato?`,
+Qual é a explicação científica que desmente esse boato?`,
         opcoes: [
-          { id: 1, texto: "O gl�ten causa uma leve inflama��o em todos, mas o corpo consegue neutralizar essa toxina atrav�s do suor.", correta: false },
+          { id: 1, texto: "O glúten causa uma leve inflamação em todos, mas o corpo consegue neutralizar essa toxina através do suor.", correta: false },
           {
             id: 2,
             texto:
-              "Em indiv�duos saud�veis, o gl�ten � digerido sem desencadear resposta imunol�gica ou inflamat�ria sist�mica.", correta: true,
+              "Em indivíduos saudáveis, o glúten é digerido sem desencadear resposta imunológica ou inflamatória sistêmica.", correta: true,
           },
-          { id: 3, texto: "A inflama��o sist�mica do gl�ten s� ocorre se a pessoa n�o praticar atividades f�sicas regularmente.", correta: false },
+          { id: 3, texto: "A inflamação sistêmica do glúten só ocorre se a pessoa não praticar atividades físicas regularmente.", correta: false },
         ],
         explicacao:
-          "A ci�ncia demonstra que organismos saud�veis lidam perfeitamente com a prote�na do gl�ten, e sua restri��o desnecess�ria pode at� reduzir a ingest�o de fibras importantes.",
+          "A ciência demonstra que organismos saudáveis lidam perfeitamente com a proteína do glúten, e sua restrição desnecessária pode até reduzir a ingestão de fibras importantes.",
       },
       {
         pergunta: `Um coach de emagrecimento alerta que: 
         
-***"a frutose da fruta vai direto para o f�gado e causa esteatose hep�tica".*** 
+***"a frutose da fruta vai direto para o fígado e causa esteatose hepática".*** 
         
-Por que essa afirma��o � nutricionalmente incorreta?`,
+Por que essa afirmação é nutricionalmente incorreta?`,
         opcoes: [
-          { id: 1, texto: "A frutose presente nas frutas �ntegras vem acompanhada de fibras e polifen�is que modulam sua absor��o.", correta: true },
-          { id: 2, texto: "A esteatose hep�tica s� � causada por fatores gen�ticos, sendo imposs�vel desenvolv�-la atrav�s da alimenta��o.", correta: false },
-          { id: 3, texto: "O f�gado humano n�o possui enzimas capazes de metabolizar a frutose, eliminando-a intacta na urina.", correta: false },
+          { id: 1, texto: "A frutose presente nas frutas íntegras vem acompanhada de fibras e polifenóis que modulam sua absorção.", correta: true },
+          { id: 2, texto: "A esteatose hepática só é causada por fatores genéticos, sendo impossível desenvolvê-la através da alimentação.", correta: false },
+          { id: 3, texto: "O fígado humano não possui enzimas capazes de metabolizar a frutose, eliminando-a intacta na urina.", correta: false },
         ],
         explicacao:
-          "A matriz alimentar da fruta inteira protege o f�gado, pois as fibras lentificam a absor��o da frutose. A esteatose est� ligada ao excesso de frutose livre em xaropes de ultraprocessados.",
+          "A matriz alimentar da fruta inteira protege o fígado, pois as fibras lentificam a absorção da frutose. A esteatose está ligada ao excesso de frutose livre em xaropes de ultraprocessados.",
       },
       {
-        pergunta: `Ao ouvir que uma **"dieta detox de sucos verdes"** limpa o f�gado de toxinas, qual � o argumento biol�gico para refutar essa ideia?`,
+        pergunta: `Ao ouvir que uma **"dieta detox de sucos verdes"** limpa o fígado de toxinas, qual é o argumento biológico para refutar essa ideia?`,
         opcoes: [
-          { id: 1, texto: "Os sucos verdes possuem enzimas ativas que substituem temporariamente as fun��es do f�gado durante a digest�o.", correta: false },
-          { id: 2, texto: "A detoxifica��o s� ocorre se o suco verde for consumido em jejum, momento em que o f�gado est� inativo.", correta: false },
-          { id: 3, texto: "O processo de detoxifica��o hep�tica ocorre via Fases I e II, e n�o h� evid�ncias de que sucos potencializem essas vias acima da capacidade natural.", correta: true },
+          { id: 1, texto: "Os sucos verdes possuem enzimas ativas que substituem temporariamente as funções do fígado durante a digestão.", correta: false },
+          { id: 2, texto: "A detoxificação só ocorre se o suco verde for consumido em jejum, momento em que o fígado está inativo.", correta: false },
+          { id: 3, texto: "O processo de detoxificação hepática ocorre via Fases I e II, e não há evidências de que sucos potencializem essas vias acima da capacidade natural.", correta: true },
         ],
         explicacao:
-          "O f�gado (via enzimas do Citocromo P450) e os rins j� realizam a desintoxica��o cont�nua do corpo de forma aut�noma e eficiente.",
+          "O fígado (via enzimas do Citocromo P450) e os rins já realizam a desintoxicação contínua do corpo de forma autônoma e eficiente.",
       },
       {
-        pergunta: `Qual � a **falsa promessa** associada ao consumo de sal rosa do Himalaia no controle da press�o arterial?`,
+        pergunta: `Qual é a **falsa promessa** associada ao consumo de sal rosa do Himalaia no controle da pressão arterial?`,
         opcoes: [
-          { id: 1, texto: "Ele possui minerais m�gicos que neutralizam completamente o efeito do cloreto de s�dio no sangue.", correta: false },
-          { id: 2, texto: "O sal rosa � livre de s�dio e composto apenas por magn�sio, tornando-o o �nico tratamento natural para hipertens�o.", correta: false },
-          { id: 3, texto: "Para obter benef�cios nutricionais dos seus minerais extras, seria necess�ria uma ingest�o letal de sal pelo excesso de s�dio.", correta: true },
+          { id: 1, texto: "Ele possui minerais mágicos que neutralizam completamente o efeito do cloreto de sódio no sangue.", correta: false },
+          { id: 2, texto: "O sal rosa é livre de sódio e composto apenas por magnésio, tornando-o o único tratamento natural para hipertensão.", correta: false },
+          { id: 3, texto: "Para obter benefícios nutricionais dos seus minerais extras, seria necessária uma ingestão letal de sal pelo excesso de sódio.", correta: true },
         ],
         explicacao:
-          `A concentra��o de minerais no sal rosa � �nfima. 
+          `A concentração de minerais no sal rosa é ínfima. 
 
-Seria preciso consumir quantidades t�xicas de cloreto de s�dio para obter alguma vantagem nutricional relevante.`,
+Seria preciso consumir quantidades tóxicas de cloreto de sódio para obter alguma vantagem nutricional relevante.`,
       },
       {
-        pergunta: "Um grupo de pais afirma que vacinas de mRNA alteram o DNA humano para sempre. Como a biologia molecular explica que isso � imposs�vel?",
+        pergunta: "Um grupo de pais afirma que vacinas de mRNA alteram o DNA humano para sempre. Como a biologia molecular explica que isso é impossível?",
         opcoes: [
-          { id: 1, texto: "O mRNA atua apenas no citoplasma para sintetizar prote�nas, n�o entra no n�cleo onde est� o DNA, e � rapidamente degradado.", correta: true },
+          { id: 1, texto: "O mRNA atua apenas no citoplasma para sintetizar proteínas, não entra no núcleo onde está o DNA, e é rapidamente degradado.", correta: true },
           { id: 2, texto: "As vacinas de mRNA alteram o DNA temporariamente apenas por 24 horas, revertendo ao normal em seguida.", correta: false },
-          { id: 3, texto: "O sistema imunol�gico destr�i a vacina antes que ela consiga entrar em qualquer c�lula do corpo.", correta: false },
+          { id: 3, texto: "O sistema imunológico destrói a vacina antes que ela consiga entrar em qualquer célula do corpo.", correta: false },
         ],
         explicacao:
-          "O mRNA da vacina n�o consegue acessar o n�cleo da c�lula e n�o possui enzimas para se fundir ao genoma humano. Ele apenas ensina a c�lula a criar a prote�na viral e logo � destru�do.",
+          "O mRNA da vacina não consegue acessar o núcleo da célula e não possui enzimas para se fundir ao genoma humano. Ele apenas ensina a célula a criar a proteína viral e logo é destruído.",
       },
       {
         pergunta: `Por que o argumento de que 
         
-**"pegar a doen�a fortalece o corpo muito mais do que vacinas sint�ticas"** 
+**"pegar a doença fortalece o corpo muito mais do que vacinas sintéticas"** 
 
-� um risco � sa�de p�blica?`,
+É um risco à saúde pública?`,
         opcoes: [
-          { id: 1, texto: "A infec��o natural gera uma resposta imune id�ntica � da vacina, mas � mais barata para o sistema de sa�de.", correta: false },
-          { id: 2, texto: "O custo biol�gico da infec��o natural � desproporcional, acarretando riscos de sequelas graves e �bito, enquanto vacinas treinam a imunidade com seguran�a.", correta: true },
-          { id: 3, texto: "As vacinas sint�ticas enfraquecem permanentemente os gl�bulos brancos, tornando a pessoa dependente de refor�os anuais.", correta: false },
+          { id: 1, texto: "A infecção natural gera uma resposta imune idêntica à da vacina, mas é mais barata para o sistema de saúde.", correta: false },
+          { id: 2, texto: "O custo biológico da infecção natural é desproporcional, acarretando riscos de sequelas graves e óbito, enquanto vacinas treinam a imunidade com segurança.", correta: true },
+          { id: 3, texto: "As vacinas sintéticas enfraquecem permanentemente os glóbulos brancos, tornando a pessoa dependente de reforços anuais.", correta: false },
         ],
         explicacao:
-          "As vacinas oferecem o benef�cio de criar mem�ria imunol�gica (imunidade duradoura) sem o alt�ssimo custo biol�gico e o risco real de complica��es severas da doen�a ativa.",
+          "As vacinas oferecem o benefício de criar memória imunológica (imunidade duradoura) sem o altíssimo custo biológico e o risco real de complicações severas da doença ativa.",
       },
       {
-        pergunta: `Em f�runs, circula o mito de que gr�vidas n�o podem tomar vacinas porque ***"inflamam o corpo e prejudicam o beb�"***. 
+        pergunta: `Em fóruns, circula o mito de que grávidas não podem tomar vacinas porque ***"inflamam o corpo e prejudicam o bebê"***. 
 
-Qual � a realidade imunol�gica?`,
+Qual é a realidade imunológica?`,
         opcoes: [
-          { id: 1, texto: "Gestantes s� podem ser vacinadas no primeiro m�s de gravidez, antes que a placenta seja completamente formada.", correta: false },
-          { id: 2, texto: "A vacina��o n�o protege o beb�, mas � obrigat�ria apenas para evitar que a m�e transmita doen�as respirat�rias no parto.", correta: false },
-          { id: 3, texto: "As vacinas indicadas para gestantes usam v�rus inativados, protegendo a m�e e transferindo anticorpos (IgG) cruciais para o beb�.", correta: true },
+          { id: 1, texto: "Gestantes só podem ser vacinadas no primeiro mês de gravidez, antes que a placenta seja completamente formada.", correta: false },
+          { id: 2, texto: "A vacinação não protege o bebê, mas é obrigatória apenas para evitar que a mãe transmita doenças respiratórias no parto.", correta: false },
+          { id: 3, texto: "As vacinas indicadas para gestantes usam vírus inativados, protegendo a mãe e transferindo anticorpos (IgG) cruciais para o bebê.", correta: true },
         ],
         explicacao:
-          "A vacina��o materna (como a da gripe) � essencial para conferir imunidade passiva ao rec�m-nascido nos primeiros meses de vida atrav�s da placenta.",
+          "A vacinação materna (como a da gripe) é essencial para conferir imunidade passiva ao recém-nascido nos primeiros meses de vida através da placenta.",
       },
       {
-        pergunta: `Muitas pessoas acreditam que a vacina da gripe causa a pr�pria doen�a por conter ***"v�rus vivo"***. 
+        pergunta: `Muitas pessoas acreditam que a vacina da gripe causa a própria doença por conter ***"vírus vivo"***. 
 
-Por que isso � biologicamente imposs�vel no sistema p�blico?`,
+Por que isso é biologicamente impossível no sistema público?`,
         opcoes: [
-          { id: 1, texto: "As vacinas de influenza do sistema p�blico s�o inativadas (v�rus mortos) ou fracionadas, tornando imposs�vel que recuperem a replica��o no hospedeiro.", correta: true },
-          { id: 2, texto: "A vacina cont�m o v�rus vivo, mas ele � neutralizado pelo �cido estomacal antes de causar sintomas.", correta: false },
-          { id: 3, texto: "O v�rus da vacina sofre uma muta��o imediata ao entrar no corpo humano, transformando-se em uma bact�ria inofensiva.", correta: false },
+          { id: 1, texto: "As vacinas de influenza do sistema público são inativadas (vírus mortos) ou fracionadas, tornando impossível que recuperem a replicação no hospedeiro.", correta: true },
+          { id: 2, texto: "A vacina contém o vírus vivo, mas ele é neutralizado pelo ácido estomacal antes de causar sintomas.", correta: false },
+          { id: 3, texto: "O vírus da vacina sofre uma mutação imediata ao entrar no corpo humano, transformando-se em uma bactéria inofensiva.", correta: false },
         ],
         explicacao:
-          "Como o material gen�tico do v�rus foi destru�do, ele n�o tem como se multiplicar e causar a infec��o. Rea��es leves s�o apenas o corpo reagindo ao imunizante, n�o a doen�a.",
+          "Como o material genético do vírus foi destruído, ele não tem como se multiplicar e causar a infecção. Reações leves são apenas o corpo reagindo ao imunizante, não a doença.",
       },
       {
-        pergunta: "O boato de que a nova vacina da Dengue (**Qdenga**) causa a forma hemorr�gica em quem nunca pegou a doen�a � baseado em qual erro?",
+        pergunta: "O boato de que a nova vacina da Dengue (**Qdenga**) causa a forma hemorrágica em quem nunca pegou a doença é baseado em qual erro?",
         opcoes: [
-          { id: 1, texto: "� uma desatualiza��o hist�rica que confunde os problemas da primeira vacina (Dengvaxia) com a seguran�a quim�rica da nova vacina (Qdenga).", correta: true },
-          { id: 2, texto: "A Qdenga realmente causa a forma hemorr�gica, mas apenas em crian�as menores de 2 anos de idade.", correta: false },
-          { id: 3, texto: "A vacina atual � estruturada apenas com o v�rus da febre amarela, n�o oferecendo prote��o real contra a dengue.", correta: false },
+          { id: 1, texto: "É uma desatualização histórica que confunde os problemas da primeira vacina (Dengvaxia) com a segurança quimérica da nova vacina (Qdenga).", correta: true },
+          { id: 2, texto: "A Qdenga realmente causa a forma hemorrágica, mas apenas em crianças menores de 2 anos de idade.", correta: false },
+          { id: 3, texto: "A vacina atual é estruturada apenas com o vírus da febre amarela, não oferecendo proteção real contra a dengue.", correta: false },
         ],
         explicacao:
-          `A Qdenga foi desenhada para superar as limita��es da vacina anterior. 
+          `A Qdenga foi desenhada para superar as limitações da vacina anterior. 
           
-Sendo uma vacina quim�rica, ela demonstrou efic�cia sem o risco de agravar a doen�a em pacientes soronegativos (que nunca tiveram dengue).`,
+Sendo uma vacina quimérica, ela demonstrou eficácia sem o risco de agravar a doença em pacientes soronegativos (que nunca tiveram dengue).`,
       },
       {
-        pergunta: "Por que o uso imediato de antibi�ticos fortes para curar uma gripe � uma pr�tica de uso irracional de medicamentos?",
+        pergunta: "Por que o uso imediato de antibióticos fortes para curar uma gripe é uma prática de uso irracional de medicamentos?",
         opcoes: [
-          { id: 1, texto: "Antibi�ticos perdem a validade rapidamente quando entram em contato com os v�rus respirat�rios.", correta: false },
-          { id: 2, texto: "Os antibi�ticos aceleram a replica��o do v�rus da gripe, fazendo com que ela evolua inevitavelmente para pneumonia.", correta: false },
-          { id: 3, texto: "Gripes s�o causadas por v�rus, enquanto antibi�ticos atingem apenas estruturas bacterianas, e o seu uso indevido cria superbact�rias.", correta: true },
+          { id: 1, texto: "Antibióticos perdem a validade rapidamente quando entram em contato com os vírus respiratórios.", correta: false },
+          { id: 2, texto: "Os antibióticos aceleram a replicação do vírus da gripe, fazendo com que ela evolua inevitavelmente para pneumonia.", correta: false },
+          { id: 3, texto: "Gripes são causadas por vírus, enquanto antibióticos atingem apenas estruturas bacterianas, e o seu uso indevido cria superbactérias.", correta: true },
         ],
         explicacao:
-          "Antibi�ticos atuam em estruturas exclusivas das bact�rias (como a parede celular). Us�-los contra infec��es virais � **in�til** e contribui gravemente para a resist�ncia antimicrobiana global.",
+          "Antibióticos atuam em estruturas exclusivas das bactérias (como a parede celular). Usá-los contra infecções virais é **inútil** e contribui gravemente para a resistência antimicrobiana global.",
       },
       {
-        pergunta: `An�ncios muitas vezes vendem o Ozempic como a ***"cura definitiva"*** para emagrecer sem esfor�o. 
+        pergunta: `Anúncios muitas vezes vendem o Ozempic como a ***"cura definitiva"*** para emagrecer sem esforço. 
 
-Qual � a falha cl�nica dessa promessa?`,
+Qual é a falha clínica dessa promessa?`,
         opcoes: [
-          { id: 1, texto: "O medicamento altera a gen�tica do paciente, criando um bloqueio permanente de absor��o de gorduras.", correta: false },
-          { id: 2, texto: "A perda de peso r�pida sem mudan�a de estilo de vida, nutri��o e treino de for�a causa perda de massa magra grave e um forte efeito rebote posterior.", correta: true },
-          { id: 3, texto: "A semaglutida s� funciona em pacientes que consomem exclusivamente dietas vegetarianas estritas.", correta: false },
+          { id: 1, texto: "O medicamento altera a genética do paciente, criando um bloqueio permanente de absorção de gorduras.", correta: false },
+          { id: 2, texto: "A perda de peso rápida sem mudança de estilo de vida, nutrição e treino de força causa perda de massa magra grave e um forte efeito rebote posterior.", correta: true },
+          { id: 3, texto: "A semaglutida só funciona em pacientes que consomem exclusivamente dietas vegetarianas estritas.", correta: false },
         ],
         explicacao:
-          `O emagrecimento induzido sem suporte nutricional e f�sico adequados resulta em perda de tecido muscular. 
+          `O emagrecimento induzido sem suporte nutricional e físico adequados resulta em perda de tecido muscular. 
           
-Ao cessar a medica��o (an�logo do GLP-1), o ganho de peso (rebote) � r�pido e o metabolismo fica prejudicado.`,
+Ao cessar a medicação (análogo do GLP-1), o ganho de peso (rebote) é rápido e o metabolismo fica prejudicado.`,
       },
       {
-        pergunta: `C�ticos argumentam que o aquecimento global atual � apenas um ***"ciclo natural"***. 
+        pergunta: `Céticos argumentam que o aquecimento global atual é apenas um ***"ciclo natural"***. 
 
-Que evid�ncia cient�fica irrefut�vel liga o evento � a��o humana?`,
+Que evidência científica irrefutável liga o evento à ação humana?`,
         opcoes: [
-          { id: 1, texto: "O derretimento das calotas polares est� liberando gases artificiais que foram congelados durante a era dos dinossauros.", correta: false },
-          { id: 2, texto: "Os sat�lites modernos mediram um aumento na atividade solar que afeta diretamente apenas as regi�es industrializadas.", correta: false },
-          { id: 3, texto: "A assinatura isot�pica do carbono na atmosfera prova que o excesso de CO2 tem origem na queima de combust�veis f�sseis.", correta: true },
+          { id: 1, texto: "O derretimento das calotas polares está liberando gases artificiais que foram congelados durante a era dos dinossauros.", correta: false },
+          { id: 2, texto: "Os satélites modernos mediram um aumento na atividade solar que afeta diretamente apenas as regiões industrializadas.", correta: false },
+          { id: 3, texto: "A assinatura isotópica do carbono na atmosfera prova que o excesso de CO2 tem origem na queima de combustíveis fósseis.", correta: true },
         ],
         explicacao:
-          `A propor��o de is�topos de carbono (a **"impress�o digital"** do g�s) confirma que o aumento abrupto de CO2 atual vem do carbono antigo retirado do subsolo (combust�veis f�sseis), e n�o de fontes biog�nicas naturais.`,
+          `A proporção de isótopos de carbono (a **"impressão digital"** do gás) confirma que o aumento abrupto de CO2 atual vem do carbono antigo retirado do subsolo (combustíveis fósseis), e não de fontes biogênicas naturais.`,
       },
       {
-        pergunta: "Por que a ocorr�ncia de epis�dios de frio extremo e nevascas severas **N�O** invalida a exist�ncia do aquecimento global?",
+        pergunta: "Por que a ocorrência de episódios de frio extremo e nevascas severas **NÃO** invalida a existência do aquecimento global?",
         opcoes: [
-          { id: 1, texto: "O evento extremo � causado pela instabilidade t�rmica que desestabiliza correntes de ar polar, empurrando massas congelantes para latitudes mais baixas.", correta: true },
-          { id: 2, texto: "O aquecimento global afeta apenas o Hemisf�rio Sul, deixando o Hemisf�rio Norte cada vez mais frio.", correta: false },
-          { id: 3, texto: "O frio extremo ocorre porque as calotas polares est�o evaporando e resfriando artificialmente a atmosfera.", correta: false },
+          { id: 1, texto: "O evento extremo é causado pela instabilidade térmica que desestabiliza correntes de ar polar, empurrando massas congelantes para latitudes mais baixas.", correta: true },
+          { id: 2, texto: "O aquecimento global afeta apenas o Hemisfério Sul, deixando o Hemisfério Norte cada vez mais frio.", correta: false },
+          { id: 3, texto: "O frio extremo ocorre porque as calotas polares estão evaporando e resfriando artificialmente a atmosfera.", correta: false },
         ],
         explicacao:
-          `A confus�o ocorre por n�o diferenciar tempo (curto prazo) e clima (longo prazo). 
+          `A confusão ocorre por não diferenciar tempo (curto prazo) e clima (longo prazo). 
           
-O aquecimento global altera e enfraquece as barreiras atmosf�ricas naturais, permitindo que frentes de frio severo alcancem locais anormais.`,
+O aquecimento global altera e enfraquece as barreiras atmosféricas naturais, permitindo que frentes de frio severo alcancem locais anormais.`,
       },
       {
-        pergunta: `Um argumento comum tenta justificar as queimadas na Amaz�nia como: 
+        pergunta: `Um argumento comum tenta justificar as queimadas na Amazônia como: 
         
 ***"eventos naturais causados pelo calor extremo"***. 
 
-Biogeograficamente, por que isso est� errado?`,
+Biogeograficamente, por que isso está errado?`,
         opcoes: [
-          { id: 1, texto: "As �rvores da Amaz�nia produzem uma seiva altamente inflam�vel que entra em combust�o espont�nea durante o ver�o.", correta: false },
-          { id: 2, texto: "A Amaz�nia � uma floresta �mida onde o fogo n�o faz parte do ciclo natural; as queimadas s�o majoritariamente de origem humana para abrir pastagens.", correta: true },
-          { id: 3, texto: "O aquecimento global secou os rios, transformando a Amaz�nia em um grande deserto, o que atrai raios incendi�rios.", correta: false },
+          { id: 1, texto: "As árvores da Amazônia produzem uma seiva altamente inflamável que entra em combustão espontânea durante o verão.", correta: false },
+          { id: 2, texto: "A Amazônia é uma floresta úmida onde o fogo não faz parte do ciclo natural; as queimadas são majoritariamente de origem humana para abrir pastagens.", correta: true },
+          { id: 3, texto: "O aquecimento global secou os rios, transformando a Amazônia em um grande deserto, o que atrai raios incendiários.", correta: false },
         ],
         explicacao:
-          "Diferente do Cerrado, a Amaz�nia n�o evoluiu com o fogo e n�o entra em combust�o espont�nea facilmente. Os fogos s�o criminosos ou deliberados.",
+          "Diferente do Cerrado, a Amazônia não evoluiu com o fogo e não entra em combustão espontânea facilmente. Os fogos são criminosos ou deliberados.",
       },
       {
         pergunta: `Ao afirmar que 
         
-***"a crise clim�tica � um problema que s� afetar� as gera��es do pr�ximo s�culo"*** 
+***"a crise climática é um problema que só afetará as gerações do próximo século"*** 
 
-Qual t�cnica de desinforma��o est� sendo usada e qual � a realidade?`,
+Qual técnica de desinformação está sendo usada e qual é a realidade?`,
         opcoes: [
-          { id: 1, texto: "Usa a Invers�o L�gica. A realidade � que o clima da Terra voltar� ao normal em 10 anos devido a mecanismos de auto-refrigera��o do planeta.", correta: false },
-          { id: 2, texto: "Usa o Distanciamento Temporal. A realidade � que os impactos j� s�o severos no presente, manifestando-se em eventos clim�ticos extremos e piora da sa�de p�blica.", correta: true },
-          { id: 3, texto: "Usa o Medo do Futuro. A realidade � que as proje��es clim�ticas est�o todas erradas e nenhum efeito � sentido no presente.", correta: false },
+          { id: 1, texto: "Usa a Inversão Lógica. A realidade é que o clima da Terra voltará ao normal em 10 anos devido a mecanismos de auto-refrigeração do planeta.", correta: false },
+          { id: 2, texto: "Usa o Distanciamento Temporal. A realidade é que os impactos já são severos no presente, manifestando-se em eventos climáticos extremos e piora da saúde pública.", correta: true },
+          { id: 3, texto: "Usa o Medo do Futuro. A realidade é que as projeções climáticas estão todas erradas e nenhum efeito é sentido no presente.", correta: false },
         ],
         explicacao:
-          `A desinforma��o tenta adiar a��es atrav�s do distanciamento. 
+          `A desinformação tenta adiar ações através do distanciamento. 
 
-Por�m, o aumento de ondas de calor mortais e a altera��o nos padr�es de doen�as infecciosas mostram que a crise j� � uma realidade da d�cada atual.`,
+Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças infecciosas mostram que a crise já é uma realidade da década atual.`,
       }
     ];
 
@@ -970,8 +984,8 @@ Por�m, o aumento de ondas de calor mortais e a altera��o nos padr�es de 
       const messageEl = generateQuizText(option, "user-message");
       const feedbackText =
         correta === "true"
-          ? "&#x2705; Correto! Mais uma fake news desmistificada por voc�."
-          : "? Resposta incorreta, mas � errando que se aprende! Confira a explica��o a seguir.";
+          ? "&#x2705; Correto! Mais uma fake news desmistificada por você."
+          : "❌ Resposta incorreta, mas é errando que se aprende! Confira a explicação a seguir.";
 
       if (correta === "true") {
         scoreQuiz++;
@@ -984,7 +998,7 @@ Por�m, o aumento de ondas de calor mortais e a altera��o nos padr�es de 
         scrollToMessage(messageEl);
 
         if (currentIndex < quizQuestions.length - 1) {
-          renderButtons([{ texto: "Pr�xima Pergunta", action: "next" }]);
+          renderButtons([{ texto: "Próxima Pergunta", action: "next" }]);
         } else {
           renderButtons([{ texto: "Finalizar Quiz", action: "exit" }]);
         }
@@ -1074,19 +1088,19 @@ Por�m, o aumento de ondas de calor mortais e a altera��o nos padr�es de 
           },
           {
             id: [0, 1, 2, 3],
-            text: `<strong>Sua pontua��o foi ${scoreQuiz}/15 � Iniciante Curioso.</strong><br><br>Voc� ainda est� no in�cio da jornada, mas o mais importante � que deu o primeiro passo. A desinforma��o se combate com informa��o � explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> e comece a construir seu senso cr�tico.<br><br>Nos siga no Instagram <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> para aprender mais todo dia!`
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Iniciante Curioso.</strong><br><br>Você ainda está no início da jornada, mas o mais importante é que deu o primeiro passo. A desinformação se combate com informação — explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> e comece a construir seu senso crítico.<br><br>Nos siga no Instagram <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> para aprender mais todo dia!`
           },
           {
             id: [4, 5, 6, 7, 8],
-            text: `<strong>Sua pontua��o foi ${scoreQuiz}/15 � Detector em Treinamento.</strong><br><br>Voc� j� consegue identificar algumas fake news, mas vieses cognitivos e narrativas enganosas ainda podem te pegar de surpresa. Continue treinando � o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> est� cheio de conte�do para te levar ao pr�ximo n�vel.<br><br>Nos siga no <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>!`
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Detector em Treinamento.</strong><br><br>Você já consegue identificar algumas fake news, mas vieses cognitivos e narrativas enganosas ainda podem te pegar de surpresa. Continue treinando — o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> está cheio de conteúdo para te levar ao próximo nível.<br><br>Nos siga no <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>!`
           },
           {
             id: [9, 10, 11, 12],
-            text: `<strong>Sua pontua��o foi ${scoreQuiz}/15 � Analista Cr�tico.</strong><br><br>Seu senso cr�tico j� est� bem desenvolvido e poucos mitos passam por voc�. Para ir al�m, explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> � l� voc� encontra an�lises aprofundadas sobre desinforma��o, fake news e pensamento cr�tico.<br><br>Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> e fique sempre � frente.`
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Analista Crítico.</strong><br><br>Seu senso crítico já está bem desenvolvido e poucos mitos passam por você. Para ir além, explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> — lá você encontra análises aprofundadas sobre desinformação, fake news e pensamento crítico.<br><br>Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> e fique sempre à frente.`
           },
           {
             id: [13, 14, 15],
-            text: `<strong>Sua pontua��o foi ${scoreQuiz}/15 � Desmistificador.</strong><br><br>Seu n�vel de pensamento cr�tico � raro � voc� n�o apenas identifica fake news, como entende os mecanismos por tr�s delas. Compartilhe esse conhecimento, indique o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> para quem precisa.<br><br>O mundo precisa de mais pessoas como voc�. Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>.`
+            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Desmistificador.</strong><br><br>Seu nível de pensamento crítico é raro — você não apenas identifica fake news, como entende os mecanismos por trás delas. Compartilhe esse conhecimento, indique o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> para quem precisa.<br><br>O mundo precisa de mais pessoas como você. Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>.`
           }
         ];
         
@@ -1127,15 +1141,15 @@ Por�m, o aumento de ondas de calor mortais e a altera��o nos padr�es de 
       setTimeout(() => {
         const botText = `Bem-vindo ao **Quiz Desmistifake!** 
           
-Vou te fazer 15 perguntas sobre sa�de. 
+Vou te fazer 15 perguntas sobre saúde. 
 
-Bora l�?`;
+Bora lá?`;
         const messageEl = generateQuizText(botText, "bot-message");
 
         scrollToMessage(messageEl);
 
         renderButtons([
-          { texto: "Come�ar", action: "start" },
+          { texto: "Começar", action: "start" },
           { texto: "Sair", action: "exit" },
         ]);
         progressNum.innerHTML = `0/15`;
@@ -1145,14 +1159,19 @@ Bora l�?`;
     };
 
     messageInput.addEventListener("input", () => {
+      // 1. Reseta a altura para o mínimo inicial para forçar o recálculo do conteúdo
       messageInput.style.height = initialInputHeight + "px";
       
+      // 2. Mede o scrollHeight real gerado pelo texto atual
       let currentScrollHeight = messageInput.scrollHeight;
       
+      // 3. Se a caixa estiver vazia ou o tamanho medido for menor/igual a 66px,
+      // significa que o texto ainda está na primeira linha.
       if (messageInput.value.trim() === "" || currentScrollHeight <= 66) {
-          messageInput.style.height = initialInputHeight + "px";
-          chatForm.style.borderRadius = ""; 
+          messageInput.style.height = initialInputHeight + "px"; // Mantém os 47px originais do CSS
+          chatForm.style.borderRadius = ""; // Retorna para os 32px originais do CSS
       } else {
+          // Se passou de 66px, o texto quebrou linha! Expandimos respeitando o teto de 180px
           const newHeight = Math.min(currentScrollHeight, 180);
           messageInput.style.height = newHeight + "px";
           chatForm.style.borderRadius = "20px";
@@ -1206,6 +1225,36 @@ Bora l�?`;
       }
     });
 
+    // Código definitivo para travar o chat no topo visível quando o teclado abrir
+    if (window.visualViewport) {
+      const adjustChatHeight = () => {
+        if (window.innerWidth <= 800) {
+          const chatbotPopup = document.querySelector(".chatbot-popup");
+          if (chatbotPopup) {
+            // 1. Define a altura baseada na área útil restante
+            chatbotPopup.style.height = `${window.visualViewport.height}px`;
+            
+            // 2. FORÇA o topo a acompanhar o deslocamento do teclado, impedindo que suba
+            chatbotPopup.style.top = `${window.visualViewport.offsetTop}px`;
+          }
+        } else {
+          // Limpa as propriedades caso volte para o desktop
+          const chatbotPopup = document.querySelector(".chatbot-popup");
+          if (chatbotPopup) {
+            chatbotPopup.style.height = "";
+            chatbotPopup.style.top = "";
+          }
+        }
+      };
+
+      // Escuta as atualizações de tamanho e rolagem do teclado virtual
+      window.visualViewport.addEventListener("resize", adjustChatHeight);
+      window.visualViewport.addEventListener("scroll", adjustChatHeight);
+      
+      adjustChatHeight();
+      scrollToBottom();
+    }
+    
     chatbotToggler.addEventListener("click", () => {
       document.body.classList.toggle("show-chatbot");
     });
