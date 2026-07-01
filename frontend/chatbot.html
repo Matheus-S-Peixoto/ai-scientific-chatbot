@@ -161,6 +161,7 @@
     flex-direction: column;
     scrollbar-width: thin;
     scrollbar-color: #cccce5 transparent;
+    overscroll-behavior: contain;
   }
 
   .chat-body .message {
@@ -234,6 +235,7 @@
     color: #fff;
     background: #21409a;
     border-radius: 13px 13px 3px 13px;
+    white-space: pre-wrap;
   }
 
   .chat-body .bot-message .thinking-indicator {
@@ -397,7 +399,7 @@
     width: 100%;
     resize: none;
     max-height: 180px;
-    white-space: pre-line;
+    white-space: pre-wrap;
     font-size: 1.5rem;
     padding: 14px 0 13px 18px;
     border-radius: inherit;
@@ -415,6 +417,7 @@
     align-items: center;
     align-self: flex-end;
     padding-right: 6px;
+    padding-left: 4px;
   }
 
   .chat-form .chat-controls button {
@@ -456,30 +459,44 @@
     }
 
     .chatbot-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
       right: 0;
-      bottom: 0;
-      height: 100%;
-      border-radius: 0;
+      
+      /* Deixamos a altura inicial, mas o JS vai atualizar dinamicamente no mobile */
+      height: 100%; 
       width: 100%;
       max-width: none;
       max-height: none;
+      border-radius: 0;
+
+      display: flex !important;
+      flex-direction: column !important;
     }
 
     .chatbot-popup .chat-header {
       padding: 12px 15px;
+      flex-shrink: 0 !important; /* Impede o topo de sumir */
     }
 
     .chat-body {
-      height: calc(90% - 55px);
-      padding: 25 15;
+      flex: 1 !important; 
+      padding: 25px 15px; 
+      overflow-y: auto !important;
     }
 
     .chat-footer {
       padding: 10px 15px 15px;
+      flex-shrink: 0 !important; /* Impede o rodapÃ© de quebrar */
     }
 
     body.show-chatbot #chatbot-toggler {
       display: none;
+    }
+
+    body.show-chatbot {
+      overflow: hidden !important;
     }
   }
 </style>
@@ -536,16 +553,16 @@
         ></path>
       </svg>
       <div class="message-text">
-        Olá! Seja muito bem-vindo(a). ??<br>
+        OlÃ¡! Seja muito bem-vindo(a). ğŸ˜Š<br>
         <br>
-        Eu sou o <strong>Doutor Desmistifake</strong>, o assistente virtual oficial do projeto <strong>Desmistifake Saúde (Unisinos)</strong>.<br>
+        Eu sou o <strong>Doutor Desmistifake</strong>, o assistente virtual oficial do projeto <strong>Desmistifake SaÃºde (Unisinos)</strong>.<br>
         <br>
-        Estou aqui para guiar você pelos conteúdos científicos do nosso projeto, ajudando a combater a desinformação dentro dos limites do nosso material disponível. <br>
+        Estou aqui para guiar vocÃª pelos conteÃºdos cientÃ­ficos do nosso projeto, ajudando a combater a desinformaÃ§Ã£o dentro dos limites do nosso material disponÃ­vel. <br>
         <br>
-        ?? <strong>Quer testar os seus conhecimentos?</strong><br>
-        Nós também temos um quiz super legal sobre saúde! Para jogar, basta enviar <span style="font-weight: bold;">"/quiz"</span> aqui no chat.<br>
+        ğŸ’¡ <strong>Quer testar os seus conhecimentos?</strong><br>
+        NÃ³s tambÃ©m temos um quiz super legal sobre saÃºde! Para jogar, basta enviar <span style="font-weight: bold;">"/quiz"</span> aqui no chat.<br>
         <br>
-        Como posso ajudar você hoje?
+        Como posso ajudar vocÃª hoje?
       </div>
     </div>
   </div>
@@ -616,194 +633,194 @@
       {
         pergunta: `Uma blogueira fitness afirma que: 
         
-***"O glúten é um veneno inflamatório para todo mundo."***. 
+***"O glÃºten Ã© um veneno inflamatÃ³rio para todo mundo."***
         
-Qual é a explicação científica que desmente esse boato?`,
+Qual Ã© a explicaÃ§Ã£o cientÃ­fica que desmente esse boato?`,
         opcoes: [
-          { id: 1, texto: "O glúten causa uma leve inflamação em todos, mas o corpo consegue neutralizar essa toxina através do suor.", correta: false },
+          { id: 1, texto: "O glÃºten causa uma leve inflamaÃ§Ã£o em todos, mas o corpo consegue neutralizar essa toxina atravÃ©s do suor.", correta: false },
           {
             id: 2,
             texto:
-              "Em indivíduos saudáveis, o glúten é digerido sem desencadear resposta imunológica ou inflamatória sistêmica.", correta: true,
+              "Em indivÃ­duos saudÃ¡veis, o glÃºten Ã© digerido sem desencadear resposta imunolÃ³gica ou inflamatÃ³ria sistÃªmica.", correta: true,
           },
-          { id: 3, texto: "A inflamação sistêmica do glúten só ocorre se a pessoa não praticar atividades físicas regularmente.", correta: false },
+          { id: 3, texto: "A inflamaÃ§Ã£o sistÃªmica do glÃºten sÃ³ ocorre se a pessoa nÃ£o praticar atividades fÃ­sicas regularmente.", correta: false },
         ],
         explicacao:
-          "A ciência demonstra que organismos saudáveis lidam perfeitamente com a proteína do glúten, e sua restrição desnecessária pode até reduzir a ingestão de fibras importantes.",
+          "A ciÃªncia demonstra que organismos saudÃ¡veis lidam perfeitamente com a proteÃ­na do glÃºten, e sua restriÃ§Ã£o desnecessÃ¡ria pode atÃ© reduzir a ingestÃ£o de fibras importantes.",
       },
       {
         pergunta: `Um coach de emagrecimento alerta que: 
         
-***"a frutose da fruta vai direto para o fígado e causa esteatose hepática".*** 
+***"a frutose da fruta vai direto para o fÃ­gado e causa esteatose hepÃ¡tica".*** 
         
-Por que essa afirmação é nutricionalmente incorreta?`,
+Por que essa afirmaÃ§Ã£o Ã© nutricionalmente incorreta?`,
         opcoes: [
-          { id: 1, texto: "A frutose presente nas frutas íntegras vem acompanhada de fibras e polifenóis que modulam sua absorção.", correta: true },
-          { id: 2, texto: "A esteatose hepática só é causada por fatores genéticos, sendo impossível desenvolvê-la através da alimentação.", correta: false },
-          { id: 3, texto: "O fígado humano não possui enzimas capazes de metabolizar a frutose, eliminando-a intacta na urina.", correta: false },
+          { id: 1, texto: "A frutose presente nas frutas Ã­ntegras vem acompanhada de fibras e polifenÃ³is que modulam sua absorÃ§Ã£o.", correta: true },
+          { id: 2, texto: "A esteatose hepÃ¡tica sÃ³ Ã© causada por fatores genÃ©ticos, sendo impossÃ­vel desenvolvÃª-la atravÃ©s da alimentaÃ§Ã£o.", correta: false },
+          { id: 3, texto: "O fÃ­gado humano nÃ£o possui enzimas capazes de metabolizar a frutose, eliminando-a intacta na urina.", correta: false },
         ],
         explicacao:
-          "A matriz alimentar da fruta inteira protege o fígado, pois as fibras lentificam a absorção da frutose. A esteatose está ligada ao excesso de frutose livre em xaropes de ultraprocessados.",
+          "A matriz alimentar da fruta inteira protege o fÃ­gado, pois as fibras lentificam a absorÃ§Ã£o da frutose. A esteatose estÃ¡ ligada ao excesso de frutose livre em xaropes de ultraprocessados.",
       },
       {
-        pergunta: `Ao ouvir que uma **"dieta detox de sucos verdes"** limpa o fígado de toxinas, qual é o argumento biológico para refutar essa ideia?`,
+        pergunta: `Ao ouvir que uma **"dieta detox de sucos verdes"** limpa o fÃ­gado de toxinas, qual Ã© o argumento biolÃ³gico para refutar essa ideia?`,
         opcoes: [
-          { id: 1, texto: "Os sucos verdes possuem enzimas ativas que substituem temporariamente as funções do fígado durante a digestão.", correta: false },
-          { id: 2, texto: "A detoxificação só ocorre se o suco verde for consumido em jejum, momento em que o fígado está inativo.", correta: false },
-          { id: 3, texto: "O processo de detoxificação hepática ocorre via Fases I e II, e não há evidências de que sucos potencializem essas vias acima da capacidade natural.", correta: true },
+          { id: 1, texto: "Os sucos verdes possuem enzimas ativas que substituem temporariamente as funÃ§Ãµes do fÃ­gado durante a digestÃ£o.", correta: false },
+          { id: 2, texto: "A detoxificaÃ§Ã£o sÃ³ ocorre se o suco verde for consumido em jejum, momento em que o fÃ­gado estÃ¡ inativo.", correta: false },
+          { id: 3, texto: "O processo de detoxificaÃ§Ã£o hepÃ¡tica ocorre via Fases I e II, e nÃ£o hÃ¡ evidÃªncias de que sucos potencializem essas vias acima da capacidade natural.", correta: true },
         ],
         explicacao:
-          "O fígado (via enzimas do Citocromo P450) e os rins já realizam a desintoxicação contínua do corpo de forma autônoma e eficiente.",
+          "O fÃ­gado (via enzimas do Citocromo P450) e os rins jÃ¡ realizam a desintoxicaÃ§Ã£o contÃ­nua do corpo de forma autÃ´noma e eficiente.",
       },
       {
-        pergunta: `Qual é a **falsa promessa** associada ao consumo de sal rosa do Himalaia no controle da pressão arterial?`,
+        pergunta: `Qual Ã© a **falsa promessa** associada ao consumo de sal rosa do Himalaia no controle da pressÃ£o arterial?`,
         opcoes: [
-          { id: 1, texto: "Ele possui minerais mágicos que neutralizam completamente o efeito do cloreto de sódio no sangue.", correta: false },
-          { id: 2, texto: "O sal rosa é livre de sódio e composto apenas por magnésio, tornando-o o único tratamento natural para hipertensão.", correta: false },
-          { id: 3, texto: "Para obter benefícios nutricionais dos seus minerais extras, seria necessária uma ingestão letal de sal pelo excesso de sódio.", correta: true },
+          { id: 1, texto: "Ele possui minerais mÃ¡gicos que neutralizam completamente o efeito do cloreto de sÃ³dio no sangue.", correta: false },
+          { id: 2, texto: "O sal rosa Ã© livre de sÃ³dio e composto apenas por magnÃ©sio, tornando-o o Ãºnico tratamento natural para hipertensÃ£o.", correta: false },
+          { id: 3, texto: "Para obter benefÃ­cios nutricionais dos seus minerais extras, seria necessÃ¡ria uma ingestÃ£o letal de sal pelo excesso de sÃ³dio.", correta: true },
         ],
         explicacao:
-          `A concentração de minerais no sal rosa é ínfima. 
+          `A concentraÃ§Ã£o de minerais no sal rosa Ã© Ã­nfima. 
 
-Seria preciso consumir quantidades tóxicas de cloreto de sódio para obter alguma vantagem nutricional relevante.`,
+Seria preciso consumir quantidades tÃ³xicas de cloreto de sÃ³dio para obter alguma vantagem nutricional relevante.`,
       },
       {
-        pergunta: "Um grupo de pais afirma que vacinas de mRNA alteram o DNA humano para sempre. Como a biologia molecular explica que isso é impossível?",
+        pergunta: "Um grupo de pais afirma que vacinas de mRNA alteram o DNA humano para sempre. Como a biologia molecular explica que isso Ã© impossÃ­vel?",
         opcoes: [
-          { id: 1, texto: "O mRNA atua apenas no citoplasma para sintetizar proteínas, não entra no núcleo onde está o DNA, e é rapidamente degradado.", correta: true },
+          { id: 1, texto: "O mRNA atua apenas no citoplasma para sintetizar proteÃ­nas, nÃ£o entra no nÃºcleo onde estÃ¡ o DNA, e Ã© rapidamente degradado.", correta: true },
           { id: 2, texto: "As vacinas de mRNA alteram o DNA temporariamente apenas por 24 horas, revertendo ao normal em seguida.", correta: false },
-          { id: 3, texto: "O sistema imunológico destrói a vacina antes que ela consiga entrar em qualquer célula do corpo.", correta: false },
+          { id: 3, texto: "O sistema imunolÃ³gico destrÃ³i a vacina antes que ela consiga entrar em qualquer cÃ©lula do corpo.", correta: false },
         ],
         explicacao:
-          "O mRNA da vacina não consegue acessar o núcleo da célula e não possui enzimas para se fundir ao genoma humano. Ele apenas ensina a célula a criar a proteína viral e logo é destruído.",
+          "O mRNA da vacina nÃ£o consegue acessar o nÃºcleo da cÃ©lula e nÃ£o possui enzimas para se fundir ao genoma humano. Ele apenas ensina a cÃ©lula a criar a proteÃ­na viral e logo Ã© destruÃ­do.",
       },
       {
         pergunta: `Por que o argumento de que 
         
-**"pegar a doença fortalece o corpo muito mais do que vacinas sintéticas"** 
+**"pegar a doenÃ§a fortalece o corpo muito mais do que vacinas sintÃ©ticas"** 
 
-É um risco à saúde pública?`,
+Ã© um risco Ã  saÃºde pÃºblica?`,
         opcoes: [
-          { id: 1, texto: "A infecção natural gera uma resposta imune idêntica à da vacina, mas é mais barata para o sistema de saúde.", correta: false },
-          { id: 2, texto: "O custo biológico da infecção natural é desproporcional, acarretando riscos de sequelas graves e óbito, enquanto vacinas treinam a imunidade com segurança.", correta: true },
-          { id: 3, texto: "As vacinas sintéticas enfraquecem permanentemente os glóbulos brancos, tornando a pessoa dependente de reforços anuais.", correta: false },
+          { id: 1, texto: "A infecÃ§Ã£o natural gera uma resposta imune idÃªntica Ã  da vacina, mas Ã© mais barata para o sistema de saÃºde.", correta: false },
+          { id: 2, texto: "O custo biolÃ³gico da infecÃ§Ã£o natural Ã© desproporcional, acarretando riscos de sequelas graves e Ã³bito, enquanto vacinas treinam a imunidade com seguranÃ§a.", correta: true },
+          { id: 3, texto: "As vacinas sintÃ©ticas enfraquecem permanentemente os glÃ³bulos brancos, tornando a pessoa dependente de reforÃ§os anuais.", correta: false },
         ],
         explicacao:
-          "As vacinas oferecem o benefício de criar memória imunológica (imunidade duradoura) sem o altíssimo custo biológico e o risco real de complicações severas da doença ativa.",
+          "As vacinas oferecem o benefÃ­cio de criar memÃ³ria imunolÃ³gica (imunidade duradoura) sem o altÃ­ssimo custo biolÃ³gico e o risco real de complicaÃ§Ãµes severas da doenÃ§a ativa.",
       },
       {
-        pergunta: `Em fóruns, circula o mito de que grávidas não podem tomar vacinas porque ***"inflamam o corpo e prejudicam o bebê"***. 
+        pergunta: `Em fÃ³runs, circula o mito de que grÃ¡vidas nÃ£o podem tomar vacinas porque ***"inflamam o corpo e prejudicam o bebÃª"***. 
 
-Qual é a realidade imunológica?`,
+Qual Ã© a realidade imunolÃ³gica?`,
         opcoes: [
-          { id: 1, texto: "Gestantes só podem ser vacinadas no primeiro mês de gravidez, antes que a placenta seja completamente formada.", correta: false },
-          { id: 2, texto: "A vacinação não protege o bebê, mas é obrigatória apenas para evitar que a mãe transmita doenças respiratórias no parto.", correta: false },
-          { id: 3, texto: "As vacinas indicadas para gestantes usam vírus inativados, protegendo a mãe e transferindo anticorpos (IgG) cruciais para o bebê.", correta: true },
+          { id: 1, texto: "Gestantes sÃ³ podem ser vacinadas no primeiro mÃªs de gravidez, antes que a placenta seja completamente formada.", correta: false },
+          { id: 2, texto: "A vacinaÃ§Ã£o nÃ£o protege o bebÃª, mas Ã© obrigatÃ³ria apenas para evitar que a mÃ£e transmita doenÃ§as respiratÃ³rias no parto.", correta: false },
+          { id: 3, texto: "As vacinas indicadas para gestantes usam vÃ­rus inativados, protegendo a mÃ£e e transferindo anticorpos (IgG) cruciais para o bebÃª.", correta: true },
         ],
         explicacao:
-          "A vacinação materna (como a da gripe) é essencial para conferir imunidade passiva ao recém-nascido nos primeiros meses de vida através da placenta.",
+          "A vacinaÃ§Ã£o materna (como a da gripe) Ã© essencial para conferir imunidade passiva ao recÃ©m-nascido nos primeiros meses de vida atravÃ©s da placenta.",
       },
       {
-        pergunta: `Muitas pessoas acreditam que a vacina da gripe causa a própria doença por conter ***"vírus vivo"***. 
+        pergunta: `Muitas pessoas acreditam que a vacina da gripe causa a prÃ³pria doenÃ§a por conter ***"vÃ­rus vivo"***. 
 
-Por que isso é biologicamente impossível no sistema público?`,
+Por que isso Ã© biologicamente impossÃ­vel no sistema pÃºblico?`,
         opcoes: [
-          { id: 1, texto: "As vacinas de influenza do sistema público são inativadas (vírus mortos) ou fracionadas, tornando impossível que recuperem a replicação no hospedeiro.", correta: true },
-          { id: 2, texto: "A vacina contém o vírus vivo, mas ele é neutralizado pelo ácido estomacal antes de causar sintomas.", correta: false },
-          { id: 3, texto: "O vírus da vacina sofre uma mutação imediata ao entrar no corpo humano, transformando-se em uma bactéria inofensiva.", correta: false },
+          { id: 1, texto: "As vacinas de influenza do sistema pÃºblico sÃ£o inativadas (vÃ­rus mortos) ou fracionadas, tornando impossÃ­vel que recuperem a replicaÃ§Ã£o no hospedeiro.", correta: true },
+          { id: 2, texto: "A vacina contÃ©m o vÃ­rus vivo, mas ele Ã© neutralizado pelo Ã¡cido estomacal antes de causar sintomas.", correta: false },
+          { id: 3, texto: "O vÃ­rus da vacina sofre uma mutaÃ§Ã£o imediata ao entrar no corpo humano, transformando-se em uma bactÃ©ria inofensiva.", correta: false },
         ],
         explicacao:
-          "Como o material genético do vírus foi destruído, ele não tem como se multiplicar e causar a infecção. Reações leves são apenas o corpo reagindo ao imunizante, não a doença.",
+          "Como o material genÃ©tico do vÃ­rus foi destruÃ­do, ele nÃ£o tem como se multiplicar e causar a infecÃ§Ã£o. ReaÃ§Ãµes leves sÃ£o apenas o corpo reagindo ao imunizante, nÃ£o a doenÃ§a.",
       },
       {
-        pergunta: "O boato de que a nova vacina da Dengue (**Qdenga**) causa a forma hemorrágica em quem nunca pegou a doença é baseado em qual erro?",
+        pergunta: "O boato de que a nova vacina da Dengue (**Qdenga**) causa a forma hemorrÃ¡gica em quem nunca pegou a doenÃ§a Ã© baseado em qual erro?",
         opcoes: [
-          { id: 1, texto: "É uma desatualização histórica que confunde os problemas da primeira vacina (Dengvaxia) com a segurança quimérica da nova vacina (Qdenga).", correta: true },
-          { id: 2, texto: "A Qdenga realmente causa a forma hemorrágica, mas apenas em crianças menores de 2 anos de idade.", correta: false },
-          { id: 3, texto: "A vacina atual é estruturada apenas com o vírus da febre amarela, não oferecendo proteção real contra a dengue.", correta: false },
+          { id: 1, texto: "Ã‰ uma desatualizaÃ§Ã£o histÃ³rica que confunde os problemas da primeira vacina (Dengvaxia) com a seguranÃ§a quimÃ©rica da nova vacina (Qdenga).", correta: true },
+          { id: 2, texto: "A Qdenga realmente causa a forma hemorrÃ¡gica, mas apenas em crianÃ§as menores de 2 anos de idade.", correta: false },
+          { id: 3, texto: "A vacina atual Ã© estruturada apenas com o vÃ­rus da febre amarela, nÃ£o oferecendo proteÃ§Ã£o real contra a dengue.", correta: false },
         ],
         explicacao:
-          `A Qdenga foi desenhada para superar as limitações da vacina anterior. 
+          `A Qdenga foi desenhada para superar as limitaÃ§Ãµes da vacina anterior. 
           
-Sendo uma vacina quimérica, ela demonstrou eficácia sem o risco de agravar a doença em pacientes soronegativos (que nunca tiveram dengue).`,
+Sendo uma vacina quimÃ©rica, ela demonstrou eficÃ¡cia sem o risco de agravar a doenÃ§a em pacientes soronegativos (que nunca tiveram dengue).`,
       },
       {
-        pergunta: "Por que o uso imediato de antibióticos fortes para curar uma gripe é uma prática de uso irracional de medicamentos?",
+        pergunta: "Por que o uso imediato de antibiÃ³ticos fortes para curar uma gripe Ã© uma prÃ¡tica de uso irracional de medicamentos?",
         opcoes: [
-          { id: 1, texto: "Antibióticos perdem a validade rapidamente quando entram em contato com os vírus respiratórios.", correta: false },
-          { id: 2, texto: "Os antibióticos aceleram a replicação do vírus da gripe, fazendo com que ela evolua inevitavelmente para pneumonia.", correta: false },
-          { id: 3, texto: "Gripes são causadas por vírus, enquanto antibióticos atingem apenas estruturas bacterianas, e o seu uso indevido cria superbactérias.", correta: true },
+          { id: 1, texto: "AntibiÃ³ticos perdem a validade rapidamente quando entram em contato com os vÃ­rus respiratÃ³rios.", correta: false },
+          { id: 2, texto: "Os antibiÃ³ticos aceleram a replicaÃ§Ã£o do vÃ­rus da gripe, fazendo com que ela evolua inevitavelmente para pneumonia.", correta: false },
+          { id: 3, texto: "Gripes sÃ£o causadas por vÃ­rus, enquanto antibiÃ³ticos atingem apenas estruturas bacterianas, e o seu uso indevido cria superbactÃ©rias.", correta: true },
         ],
         explicacao:
-          "Antibióticos atuam em estruturas exclusivas das bactérias (como a parede celular). Usá-los contra infecções virais é **inútil** e contribui gravemente para a resistência antimicrobiana global.",
+          "AntibiÃ³ticos atuam em estruturas exclusivas das bactÃ©rias (como a parede celular). UsÃ¡-los contra infecÃ§Ãµes virais Ã© **inÃºtil** e contribui gravemente para a resistÃªncia antimicrobiana global.",
       },
       {
-        pergunta: `Anúncios muitas vezes vendem o Ozempic como a ***"cura definitiva"*** para emagrecer sem esforço. 
+        pergunta: `AnÃºncios muitas vezes vendem o Ozempic como a ***"cura definitiva"*** para emagrecer sem esforÃ§o. 
 
-Qual é a falha clínica dessa promessa?`,
+Qual Ã© a falha clÃ­nica dessa promessa?`,
         opcoes: [
-          { id: 1, texto: "O medicamento altera a genética do paciente, criando um bloqueio permanente de absorção de gorduras.", correta: false },
-          { id: 2, texto: "A perda de peso rápida sem mudança de estilo de vida, nutrição e treino de força causa perda de massa magra grave e um forte efeito rebote posterior.", correta: true },
-          { id: 3, texto: "A semaglutida só funciona em pacientes que consomem exclusivamente dietas vegetarianas estritas.", correta: false },
+          { id: 1, texto: "O medicamento altera a genÃ©tica do paciente, criando um bloqueio permanente de absorÃ§Ã£o de gorduras.", correta: false },
+          { id: 2, texto: "A perda de peso rÃ¡pida sem mudanÃ§a de estilo de vida, nutriÃ§Ã£o e treino de forÃ§a causa perda de massa magra grave e um forte efeito rebote posterior.", correta: true },
+          { id: 3, texto: "A semaglutida sÃ³ funciona em pacientes que consomem exclusivamente dietas vegetarianas estritas.", correta: false },
         ],
         explicacao:
-          `O emagrecimento induzido sem suporte nutricional e físico adequados resulta em perda de tecido muscular. 
+          `O emagrecimento induzido sem suporte nutricional e fÃ­sico adequados resulta em perda de tecido muscular. 
           
-Ao cessar a medicação (análogo do GLP-1), o ganho de peso (rebote) é rápido e o metabolismo fica prejudicado.`,
+Ao cessar a medicaÃ§Ã£o (anÃ¡logo do GLP-1), o ganho de peso (rebote) Ã© rÃ¡pido e o metabolismo fica prejudicado.`,
       },
       {
-        pergunta: `Céticos argumentam que o aquecimento global atual é apenas um ***"ciclo natural"***. 
+        pergunta: `CÃ©ticos argumentam que o aquecimento global atual Ã© apenas um ***"ciclo natural"***. 
 
-Que evidência científica irrefutável liga o evento à ação humana?`,
+Que evidÃªncia cientÃ­fica irrefutÃ¡vel liga o evento Ã  aÃ§Ã£o humana?`,
         opcoes: [
-          { id: 1, texto: "O derretimento das calotas polares está liberando gases artificiais que foram congelados durante a era dos dinossauros.", correta: false },
-          { id: 2, texto: "Os satélites modernos mediram um aumento na atividade solar que afeta diretamente apenas as regiões industrializadas.", correta: false },
-          { id: 3, texto: "A assinatura isotópica do carbono na atmosfera prova que o excesso de CO2 tem origem na queima de combustíveis fósseis.", correta: true },
+          { id: 1, texto: "O derretimento das calotas polares estÃ¡ liberando gases artificiais que foram congelados durante a era dos dinossauros.", correta: false },
+          { id: 2, texto: "Os satÃ©lites modernos mediram um aumento na atividade solar que afeta diretamente apenas as regiÃµes industrializadas.", correta: false },
+          { id: 3, texto: "A assinatura isotÃ³pica do carbono na atmosfera prova que o excesso de CO2 tem origem na queima de combustÃ­veis fÃ³sseis.", correta: true },
         ],
         explicacao:
-          `A proporção de isótopos de carbono (a **"impressão digital"** do gás) confirma que o aumento abrupto de CO2 atual vem do carbono antigo retirado do subsolo (combustíveis fósseis), e não de fontes biogênicas naturais.`,
+          `A proporÃ§Ã£o de isÃ³topos de carbono (a **"impressÃ£o digital"** do gÃ¡s) confirma que o aumento abrupto de CO2 atual vem do carbono antigo retirado do subsolo (combustÃ­veis fÃ³sseis), e nÃ£o de fontes biogÃªnicas naturais.`,
       },
       {
-        pergunta: "Por que a ocorrência de episódios de frio extremo e nevascas severas **NÃO** invalida a existência do aquecimento global?",
+        pergunta: "Por que a ocorrÃªncia de episÃ³dios de frio extremo e nevascas severas **NÃƒO** invalida a existÃªncia do aquecimento global?",
         opcoes: [
-          { id: 1, texto: "O evento extremo é causado pela instabilidade térmica que desestabiliza correntes de ar polar, empurrando massas congelantes para latitudes mais baixas.", correta: true },
-          { id: 2, texto: "O aquecimento global afeta apenas o Hemisfério Sul, deixando o Hemisfério Norte cada vez mais frio.", correta: false },
-          { id: 3, texto: "O frio extremo ocorre porque as calotas polares estão evaporando e resfriando artificialmente a atmosfera.", correta: false },
+          { id: 1, texto: "O evento extremo Ã© causado pela instabilidade tÃ©rmica que desestabiliza correntes de ar polar, empurrando massas congelantes para latitudes mais baixas.", correta: true },
+          { id: 2, texto: "O aquecimento global afeta apenas o HemisfÃ©rio Sul, deixando o HemisfÃ©rio Norte cada vez mais frio.", correta: false },
+          { id: 3, texto: "O frio extremo ocorre porque as calotas polares estÃ£o evaporando e resfriando artificialmente a atmosfera.", correta: false },
         ],
         explicacao:
-          `A confusão ocorre por não diferenciar tempo (curto prazo) e clima (longo prazo). 
+          `A confusÃ£o ocorre por nÃ£o diferenciar tempo (curto prazo) e clima (longo prazo). 
           
-O aquecimento global altera e enfraquece as barreiras atmosféricas naturais, permitindo que frentes de frio severo alcancem locais anormais.`,
+O aquecimento global altera e enfraquece as barreiras atmosfÃ©ricas naturais, permitindo que frentes de frio severo alcancem locais anormais.`,
       },
       {
-        pergunta: `Um argumento comum tenta justificar as queimadas na Amazônia como: 
+        pergunta: `Um argumento comum tenta justificar as queimadas na AmazÃ´nia como: 
         
 ***"eventos naturais causados pelo calor extremo"***. 
 
-Biogeograficamente, por que isso está errado?`,
+Biogeograficamente, por que isso estÃ¡ errado?`,
         opcoes: [
-          { id: 1, texto: "As árvores da Amazônia produzem uma seiva altamente inflamável que entra em combustão espontânea durante o verão.", correta: false },
-          { id: 2, texto: "A Amazônia é uma floresta úmida onde o fogo não faz parte do ciclo natural; as queimadas são majoritariamente de origem humana para abrir pastagens.", correta: true },
-          { id: 3, texto: "O aquecimento global secou os rios, transformando a Amazônia em um grande deserto, o que atrai raios incendiários.", correta: false },
+          { id: 1, texto: "As Ã¡rvores da AmazÃ´nia produzem uma seiva altamente inflamÃ¡vel que entra em combustÃ£o espontÃ¢nea durante o verÃ£o.", correta: false },
+          { id: 2, texto: "A AmazÃ´nia Ã© uma floresta Ãºmida onde o fogo nÃ£o faz parte do ciclo natural; as queimadas sÃ£o majoritariamente de origem humana para abrir pastagens.", correta: true },
+          { id: 3, texto: "O aquecimento global secou os rios, transformando a AmazÃ´nia em um grande deserto, o que atrai raios incendiÃ¡rios.", correta: false },
         ],
         explicacao:
-          "Diferente do Cerrado, a Amazônia não evoluiu com o fogo e não entra em combustão espontânea facilmente. Os fogos são criminosos ou deliberados.",
+          "Diferente do Cerrado, a AmazÃ´nia nÃ£o evoluiu com o fogo e nÃ£o entra em combustÃ£o espontÃ¢nea facilmente. Os fogos sÃ£o criminosos ou deliberados.",
       },
       {
         pergunta: `Ao afirmar que 
         
-***"a crise climática é um problema que só afetará as gerações do próximo século"*** 
+***"a crise climÃ¡tica Ã© um problema que sÃ³ afetarÃ¡ as geraÃ§Ãµes do prÃ³ximo sÃ©culo"*** 
 
-Qual técnica de desinformação está sendo usada e qual é a realidade?`,
+Qual tÃ©cnica de desinformaÃ§Ã£o estÃ¡ sendo usada e qual Ã© a realidade?`,
         opcoes: [
-          { id: 1, texto: "Usa a Inversão Lógica. A realidade é que o clima da Terra voltará ao normal em 10 anos devido a mecanismos de auto-refrigeração do planeta.", correta: false },
-          { id: 2, texto: "Usa o Distanciamento Temporal. A realidade é que os impactos já são severos no presente, manifestando-se em eventos climáticos extremos e piora da saúde pública.", correta: true },
-          { id: 3, texto: "Usa o Medo do Futuro. A realidade é que as projeções climáticas estão todas erradas e nenhum efeito é sentido no presente.", correta: false },
+          { id: 1, texto: "Usa a InversÃ£o LÃ³gica. A realidade Ã© que o clima da Terra voltarÃ¡ ao normal em 10 anos devido a mecanismos de auto-refrigeraÃ§Ã£o do planeta.", correta: false },
+          { id: 2, texto: "Usa o Distanciamento Temporal. A realidade Ã© que os impactos jÃ¡ sÃ£o severos no presente, manifestando-se em eventos climÃ¡ticos extremos e piora da saÃºde pÃºblica.", correta: true },
+          { id: 3, texto: "Usa o Medo do Futuro. A realidade Ã© que as projeÃ§Ãµes climÃ¡ticas estÃ£o todas erradas e nenhum efeito Ã© sentido no presente.", correta: false },
         ],
         explicacao:
-          `A desinformação tenta adiar ações através do distanciamento. 
+          `A desinformaÃ§Ã£o tenta adiar aÃ§Ãµes atravÃ©s do distanciamento. 
 
-Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças infecciosas mostram que a crise já é uma realidade da década atual.`,
+PorÃ©m, o aumento de ondas de calor mortais e a alteraÃ§Ã£o nos padrÃµes de doenÃ§as infecciosas mostram que a crise jÃ¡ Ã© uma realidade da dÃ©cada atual.`,
       }
     ];
 
@@ -967,8 +984,8 @@ Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças 
       const messageEl = generateQuizText(option, "user-message");
       const feedbackText =
         correta === "true"
-          ? "&#x2705; Correto! Mais uma fake news desmistificada por você."
-          : "? Resposta incorreta, mas é errando que se aprende! Confira a explicação a seguir.";
+          ? "&#x2705; Correto! Mais uma fake news desmistificada por vocÃª."
+          : "âŒ Resposta incorreta, mas Ã© errando que se aprende! Confira a explicaÃ§Ã£o a seguir.";
 
       if (correta === "true") {
         scoreQuiz++;
@@ -981,7 +998,7 @@ Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças 
         scrollToMessage(messageEl);
 
         if (currentIndex < quizQuestions.length - 1) {
-          renderButtons([{ texto: "Próxima Pergunta", action: "next" }]);
+          renderButtons([{ texto: "PrÃ³xima Pergunta", action: "next" }]);
         } else {
           renderButtons([{ texto: "Finalizar Quiz", action: "exit" }]);
         }
@@ -1031,7 +1048,7 @@ Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças 
         if (!progressBar[currentIndex].classList.contains("active")) {
           progressBar[currentIndex].classList.add("active");
         } else {
-          progressBar[currentIndex].remove("active");
+          progressBar[currentIndex].classList.remove("active");
         }
         progressNum.innerHTML = `${currentIndex + 1}/15`;
         isBusy = false;
@@ -1071,19 +1088,19 @@ Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças 
           },
           {
             id: [0, 1, 2, 3],
-            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Iniciante Curioso.</strong><br><br>Você ainda está no início da jornada, mas o mais importante é que deu o primeiro passo. A desinformação se combate com informação — explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> e comece a construir seu senso crítico.<br><br>Nos siga no Instagram <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> para aprender mais todo dia!`
+            text: `<strong>Sua pontuaÃ§Ã£o foi ${scoreQuiz}/15 â€” Iniciante Curioso.</strong><br><br>VocÃª ainda estÃ¡ no inÃ­cio da jornada, mas o mais importante Ã© que deu o primeiro passo. A desinformaÃ§Ã£o se combate com informaÃ§Ã£o â€” explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> e comece a construir seu senso crÃ­tico.<br><br>Nos siga no Instagram <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> para aprender mais todo dia!`
           },
           {
             id: [4, 5, 6, 7, 8],
-            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Detector em Treinamento.</strong><br><br>Você já consegue identificar algumas fake news, mas vieses cognitivos e narrativas enganosas ainda podem te pegar de surpresa. Continue treinando — o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> está cheio de conteúdo para te levar ao próximo nível.<br><br>Nos siga no <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>!`
+            text: `<strong>Sua pontuaÃ§Ã£o foi ${scoreQuiz}/15 â€” Detector em Treinamento.</strong><br><br>VocÃª jÃ¡ consegue identificar algumas fake news, mas vieses cognitivos e narrativas enganosas ainda podem te pegar de surpresa. Continue treinando â€” o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">site do Desmistifake</a></span> estÃ¡ cheio de conteÃºdo para te levar ao prÃ³ximo nÃ­vel.<br><br>Nos siga no <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>!`
           },
           {
             id: [9, 10, 11, 12],
-            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Analista Crítico.</strong><br><br>Seu senso crítico já está bem desenvolvido e poucos mitos passam por você. Para ir além, explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> — lá você encontra análises aprofundadas sobre desinformação, fake news e pensamento crítico.<br><br>Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> e fique sempre à frente.`
+            text: `<strong>Sua pontuaÃ§Ã£o foi ${scoreQuiz}/15 â€” Analista CrÃ­tico.</strong><br><br>Seu senso crÃ­tico jÃ¡ estÃ¡ bem desenvolvido e poucos mitos passam por vocÃª. Para ir alÃ©m, explore o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> â€” lÃ¡ vocÃª encontra anÃ¡lises aprofundadas sobre desinformaÃ§Ã£o, fake news e pensamento crÃ­tico.<br><br>Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span> e fique sempre Ã  frente.`
           },
           {
             id: [13, 14, 15],
-            text: `<strong>Sua pontuação foi ${scoreQuiz}/15 — Desmistificador.</strong><br><br>Seu nível de pensamento crítico é raro — você não apenas identifica fake news, como entende os mecanismos por trás delas. Compartilhe esse conhecimento, indique o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> para quem precisa.<br><br>O mundo precisa de mais pessoas como você. Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>.`
+            text: `<strong>Sua pontuaÃ§Ã£o foi ${scoreQuiz}/15 â€” Desmistificador.</strong><br><br>Seu nÃ­vel de pensamento crÃ­tico Ã© raro â€” vocÃª nÃ£o apenas identifica fake news, como entende os mecanismos por trÃ¡s delas. Compartilhe esse conhecimento, indique o <span style="color: #1A73E8;"><a href="https://desmistifake.unisinos.br">Desmistifake</a></span> para quem precisa.<br><br>O mundo precisa de mais pessoas como vocÃª. Siga <span style="color: #1A73E8;"><strong><a href="https://instagram.com/desmistifakes">@desmistifakes</a></strong></span>.`
           }
         ];
         
@@ -1124,15 +1141,15 @@ Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doenças 
       setTimeout(() => {
         const botText = `Bem-vindo ao **Quiz Desmistifake!** 
           
-Vou te fazer 15 perguntas sobre saúde. 
+Vou te fazer 15 perguntas sobre saÃºde. 
 
-Bora lá?`;
+Bora lÃ¡?`;
         const messageEl = generateQuizText(botText, "bot-message");
 
         scrollToMessage(messageEl);
 
         renderButtons([
-          { texto: "Começar", action: "start" },
+          { texto: "ComeÃ§ar", action: "start" },
           { texto: "Sair", action: "exit" },
         ]);
         progressNum.innerHTML = `0/15`;
@@ -1142,16 +1159,29 @@ Bora lá?`;
     };
 
     messageInput.addEventListener("input", () => {
+      // 1. Reseta a altura para o mÃ­nimo inicial para forÃ§ar o recÃ¡lculo do conteÃºdo
       messageInput.style.height = initialInputHeight + "px";
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 180) + "px";
-      if(messageInput.scrollHeight > initialInputHeight) {
-        chatForm.style.borderRadius = "20px";
+      
+      // 2. Mede o scrollHeight real gerado pelo texto atual
+      let currentScrollHeight = messageInput.scrollHeight;
+      
+      // 3. Se a caixa estiver vazia ou o tamanho medido for menor/igual a 66px,
+      // significa que o texto ainda estÃ¡ na primeira linha.
+      if (messageInput.value.trim() === "" || currentScrollHeight <= 66) {
+          messageInput.style.height = initialInputHeight + "px"; // MantÃ©m os 47px originais do CSS
+          chatForm.style.borderRadius = ""; // Retorna para os 32px originais do CSS
+      } else {
+          // Se passou de 66px, o texto quebrou linha! Expandimos respeitando o teto de 180px
+          const newHeight = Math.min(currentScrollHeight, 180);
+          messageInput.style.height = newHeight + "px";
+          chatForm.style.borderRadius = "20px";
       }
+      
       updateSendButton();
     });
 
     messageInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 768) {
+      if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
         e.preventDefault();
         if (messageInput.value.trim() === "/quiz") {
           startQuiz();
@@ -1195,6 +1225,36 @@ Bora lá?`;
       }
     });
 
+    // CÃ³digo definitivo para travar o chat no topo visÃ­vel quando o teclado abrir
+    if (window.visualViewport) {
+      const adjustChatHeight = () => {
+        if (window.innerWidth <= 800) {
+          const chatbotPopup = document.querySelector(".chatbot-popup");
+          if (chatbotPopup) {
+            // 1. Define a altura baseada na Ã¡rea Ãºtil restante
+            chatbotPopup.style.height = `${window.visualViewport.height}px`;
+            
+            // 2. FORÃ‡A o topo a acompanhar o deslocamento do teclado, impedindo que suba
+            chatbotPopup.style.top = `${window.visualViewport.offsetTop}px`;
+          }
+        } else {
+          // Limpa as propriedades caso volte para o desktop
+          const chatbotPopup = document.querySelector(".chatbot-popup");
+          if (chatbotPopup) {
+            chatbotPopup.style.height = "";
+            chatbotPopup.style.top = "";
+          }
+        }
+      };
+
+      // Escuta as atualizaÃ§Ãµes de tamanho e rolagem do teclado virtual
+      window.visualViewport.addEventListener("resize", adjustChatHeight);
+      window.visualViewport.addEventListener("scroll", adjustChatHeight);
+      
+      adjustChatHeight();
+      scrollToBottom();
+    }
+    
     chatbotToggler.addEventListener("click", () => {
       document.body.classList.toggle("show-chatbot");
     });
