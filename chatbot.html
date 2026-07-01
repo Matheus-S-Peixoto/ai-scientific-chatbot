@@ -633,7 +633,7 @@
       {
         pergunta: `Uma blogueira fitness afirma que: 
         
-***"O glúten é um veneno inflamatório para todo mundo."***. 
+***"O glúten é um veneno inflamatório para todo mundo."***
         
 Qual é a explicação científica que desmente esse boato?`,
         opcoes: [
@@ -699,7 +699,7 @@ Seria preciso consumir quantidades tóxicas de cloreto de sódio para obter algu
         
 **"pegar a doença fortalece o corpo muito mais do que vacinas sintéticas"** 
 
-É um risco à saúde pública?`,
+é um risco à saúde pública?`,
         opcoes: [
           { id: 1, texto: "A infecção natural gera uma resposta imune idêntica à da vacina, mas é mais barata para o sistema de saúde.", correta: false },
           { id: 2, texto: "O custo biológico da infecção natural é desproporcional, acarretando riscos de sequelas graves e óbito, enquanto vacinas treinam a imunidade com segurança.", correta: true },
@@ -1048,7 +1048,7 @@ Porém, o aumento de ondas de calor mortais e a alteração nos padrões de doen
         if (!progressBar[currentIndex].classList.contains("active")) {
           progressBar[currentIndex].classList.add("active");
         } else {
-          progressBar[currentIndex].remove("active");
+          progressBar[currentIndex].classList.remove("active");
         }
         progressNum.innerHTML = `${currentIndex + 1}/15`;
         isBusy = false;
@@ -1181,7 +1181,7 @@ Bora lá?`;
     });
 
     messageInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 768) {
+      if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
         e.preventDefault();
         if (messageInput.value.trim() === "/quiz") {
           startQuiz();
